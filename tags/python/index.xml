@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>My Site </title>
-    <link>http://replace-this-with-your-hugo-site.com/tags/python/</link>
+    <link>http://qingyunha.github.com/hugo/tags/python/</link>
     <language>en-us</language>
     <author></author>
     <rights>(C) 2016</rights>
@@ -12,10 +12,10 @@
       
         <item>
           <title>python logging</title>
-          <link>http://replace-this-with-your-hugo-site.com/post/python-logging/</link>
+          <link>http://qingyunha.github.com/hugo/post/python-logging/</link>
           <pubDate>Sat, 09 Jul 2016 21:32:25 CST</pubDate>
           <author></author>
-          <guid>http://replace-this-with-your-hugo-site.com/post/python-logging/</guid>
+          <guid>http://qingyunha.github.com/hugo/post/python-logging/</guid>
           <description>&lt;p&gt;日志对程序的调试和问题的发现很有帮助。如何设置合适的日志需要需要一些考虑。&lt;/p&gt;
 
 &lt;p&gt;以python标准库logging为例。&lt;/p&gt;
