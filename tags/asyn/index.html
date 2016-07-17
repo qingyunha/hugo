@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.16" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Noticia+Text:400,700|Marcellus+SC'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    <link rel="stylesheet" href="http://replace-this-with-your-hugo-site.com/css/styles.css">
+    <link rel="stylesheet" href="http://replace-this-with-your-hugo-site.com/css/custom.css">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://replace-this-with-your-hugo-site.com/index.xml">
+
+    
+    <title>Asyn - My Site</title>
+    <meta property='og:title' content="Asyn - My Site">
+    <meta property="og:type" content="article">
+    
+
+    <meta property="og:url" content="http://replace-this-with-your-hugo-site.com/tags/asyn/">
+    
+    
+
+
+</head>
+
+<body>
+
+  <header class="l-header">
+    <div class="p-logo">
+      <a href="http://replace-this-with-your-hugo-site.com/">My Site</a>
+    </div>
+  </header>
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+
+      <h1 class="p-page-title">Asyn</h1>
+
+      <div class="row">
+        
+        <div class="col-sm-4">
+          <article class="grid">
+  <a href="http://replace-this-with-your-hugo-site.com/translation/crawler/">
+    <div class="image" style="background-image: url(http://replace-this-with-your-hugo-site.com/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, Jul 9, 2016</time>
+      </div>
+      <h2 class="title">A Web Crawler With asyncio Coroutines</h2>
+      <div class="summary">Introduction 经典的计算机科学强调高效的算法，尽可能快地完成计算。但是很多网络程序的时间并不是消耗在计算上，而是在等待许多慢速的连接或者低频事件的发生。这些程序暴露出一个新的挑战：如何高效的等待大量网络事件。一个现代的解决方案是异步I/O。 这一章我们将实现一个简单的网络爬虫。这个爬虫只是一个原型式的异步应用，因为它等待许多响应而只做少量的计算。一次爬的网页越多，它就能越快的完成任务。如果它为每个动态的请求启动一个线程的话，随着并发请求数量的增加，它会在耗尽套接字之前，耗尽内存或者线程相关的资源。使用异步I/O可以避免这个的问题。 我们将分三个阶段展示这个例子。首先，我们会实现一个事件循环并用这个事件循环和回调来勾画出一个网络爬虫。它很有效，但是当把它扩展成更复杂的问题时，就会导致无法管理的混乱代码。然后，由于Python的协程不仅有效而且可扩展，我们将用Python的生成器函数实现一个简单的协程。在最后一个阶段，我们将使用Python标准库&rdquo;asyncio&rdquo;中功能完整的协程和异步队列完成这个网络爬虫。 The Task 网络爬虫寻找并下载一个网站上的所有网页，也许还会把它们存档，为它们建立索引。从根URL开始，它获取每个网页，解析出没有遇到过的链接加到队列中。当网页没有未见到过的链接并且队列为空时，它便停止运行。 我们可以通过同时下载大量的网页来加快这一过程。当爬虫发现新的链接，它使用一个新的套接字并行的处理这个新链接，解析响应，添加新链接到队列。当并发很大时，可能会导致性能下降，所以我们会限制并发的数量，在队列保留那些未处理的链接，直到一些正在执行的任务完成。 The Traditional Approach 怎么使一个爬虫并发？传统的做法是创建一个线程池，每个线程使用一个套接字在一段时间内负责一个网页的下载。比如，下载xkcd.com网站的一个网页： def fetch(url): sock = socket.socket() sock.connect(('xkcd.com', 80)) request = 'GET {} HTTP/1.0\r\nHost: xkcd.com\r\n\r\n'.format(url) sock.send(request.encode('ascii')) response = b'' chunk = sock.recv(4096) while chunk: response += chunk chunk = sock.recv(4096) # Page is now downloaded. links = parse_links(response) q.add(links) 套接字操作默认是阻塞的：当一个线程调用一个类似connect和recv方法时，它会阻塞，直到操作完成.1因此，为了同一时间内下载多个网页，我们需要很多线程。一个复杂的应用会通过线程池保持空闲的线程来分摊创建线程的开销。同样的做法也适用于套接字，使用连接池。 到目前为止，线程是昂贵的，操作系统对一个进程，一个用户，一台机器能使用线程做了不同的硬性限制。在Jesse系统中，一个Python线程需要50K的内存，开启上万个线程会失败。每个线程的开销和系统的限制就是这种方式的瓶颈所在。 在Dan Kegel那一篇很有影响力的文章&rdquo;The C10K problem&rdquo;2中，它提出多线程方式在I/O并发上的局限性。他在开始写道， 是时候网络服务器要同时处理成千上万的客户啦，你不这样认为么？毕竟，现在网络是个很大的地方。 Kegel在1999年创造出&rdquo;C10K&rdquo;术语。一万个连接在今天看来还是可接受的，但是问题依然存在，只不过大小不同。回到那时候，对于C10K问题，每个连接启一个线程是不切实际的。现在这个限制已经成指数级增长。确实，我们的玩具网络爬虫使用线程也可以工作的很好。但是，对于有着千万级连接的大规模应用来说，限制依然存在：会消耗掉所有线程，即使套接字还够用。那么我们该如何解决这个问题？ Async 异步I/O框架在一个线程中完成并发操作。让我们看看这是怎么做到的。 异步框架使用*非阻塞*套接字。异步爬虫中，我们在发起到服务器的连接前把套接字设为非阻塞： sock = socket.socket() sock.setblocking(False) try: sock.connect(('xkcd.com', 80)) except BlockingIOError: pass 对一个非阻塞套接字调用connect方法会立即抛出异常，即使它正常工作。这个异常模拟了底层C语言函数的行为，它把errno设置为EINPROGRESS,告诉你操作已经开始。 现在我们的爬虫需要一种知道连接何时建立的方法，这样它才能发送HTTP请求。我们可以简单地使用循环来重试： request = 'GET {} HTTP/1.0\r\nHost: xkcd.com\r\n\r\n'.format(url) encoded = request.encode('ascii') while True: try: sock.send(encoded) break # Done.</div>
+    </footer>
+  </a>
+</article>
+
+        </div>
+        
+      </div>
+
+      
+
+
+    </div>
+
+    <div class="col-md-3">
+      <aside class="site">
+
+  
+
+  
+
+  <section>
+    <header>LatestPosts</header>
+    <div>
+      
+      <article class="li">
+  <a href="http://replace-this-with-your-hugo-site.com/post/python-logging/" class="clearfix">
+    <div class="image" style="background-image: url(http://replace-this-with-your-hugo-site.com/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, Jul 9, 2016</time>
+      </div>
+      <h2 class="title">python logging</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://replace-this-with-your-hugo-site.com/translation/crawler/" class="clearfix">
+    <div class="image" style="background-image: url(http://replace-this-with-your-hugo-site.com/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, Jul 9, 2016</time>
+      </div>
+      <h2 class="title">A Web Crawler With asyncio Coroutines</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://replace-this-with-your-hugo-site.com/translation/python-interpreter/" class="clearfix">
+    <div class="image" style="background-image: url(http://replace-this-with-your-hugo-site.com/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Mon, May 9, 2016</time>
+      </div>
+      <h2 class="title">A Python Interpreter Written in Python</h2>
+    </footer>
+  </a>
+</article>
+
+      
+    </div>
+  </section>
+
+  
+  <section>
+    <header>category</header>
+    <div>
+      <ul>
+        
+      </ul>
+    </div>
+  </section>
+  
+  <section>
+    <header>tag</header>
+    <div>
+      <ul>
+        <li><a href="http://replace-this-with-your-hugo-site.com/tags/python">python</a></li><li><a href="http://replace-this-with-your-hugo-site.com/tags/asyn">asyn</a></li><li><a href="http://replace-this-with-your-hugo-site.com/tags/interpreter">interpreter</a></li><li><a href="http://replace-this-with-your-hugo-site.com/tags/logging">logging</a></li><li><a href="http://replace-this-with-your-hugo-site.com/tags/virtual-machine">virtual-machine</a></li>
+      </ul>
+    </div>
+  </section>
+  
+
+</aside>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<footer class="l-footer">
+  <p>&copy; 2016 My Site</p>
+  <p>Powered by <a href="http://gohugo.io" target="_blank" rel="nofollow">Hugo</a>, Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank" rel="nofollow">robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank" rel="nofollow">Daisuke Tsuji</a></p>
+</footer>
+
+<script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+  </body>
+</html>
+
+
