@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Blog on My Site</title>
+    <title>My Site </title>
     <link>http://qingyunha.github.com/hugo/categories/blog/</link>
-    <description>Recent content in Blog on My Site</description>
-    <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 09 Jul 2016 21:32:25 +0800</lastBuildDate>
-    <atom:link href="http://qingyunha.github.com/hugo/categories/blog/index.xml" rel="self" type="application/rss+xml" />
+    <author></author>
+    <rights>(C) 2016</rights>
+    <updated>2016-07-09 21:32:25 &#43;0800 CST</updated>
+
     
-    <item>
-      <title>python logging</title>
-      <link>http://qingyunha.github.com/hugo/post/python-logging/</link>
-      <pubDate>Sat, 09 Jul 2016 21:32:25 +0800</pubDate>
       
-      <guid>http://qingyunha.github.com/hugo/post/python-logging/</guid>
-      <description>&lt;p&gt;日志对程序的调试和问题的发现很有帮助。如何设置合适的日志需要需要一些考虑。&lt;/p&gt;
+        <item>
+          <title>python logging</title>
+          <link>http://qingyunha.github.com/hugo/post/python-logging/</link>
+          <pubDate>Sat, 09 Jul 2016 21:32:25 CST</pubDate>
+          <author></author>
+          <guid>http://qingyunha.github.com/hugo/post/python-logging/</guid>
+          <description>&lt;p&gt;日志对程序的调试和问题的发现很有帮助。如何设置合适的日志需要需要一些考虑。&lt;/p&gt;
 
 &lt;p&gt;以python标准库logging为例。&lt;/p&gt;
 
@@ -32,7 +33,9 @@
 &lt;p&gt;一个应用中可以有多个logger对象，比如每个module一个logger。
 不同logger对象可以设置不同的级别，只有大于该级别的log事件才会被记录。&lt;/p&gt;
 </description>
-    </item>
+        </item>
+      
     
+
   </channel>
 </rss>

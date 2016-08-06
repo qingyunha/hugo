@@ -1,93 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Wiki on My Site</title>
+    <title>My Site </title>
     <link>http://qingyunha.github.com/hugo/categories/wiki/</link>
-    <description>Recent content in Wiki on My Site</description>
-    <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 06 Aug 2016 14:38:12 +0800</lastBuildDate>
-    <atom:link href="http://qingyunha.github.com/hugo/categories/wiki/index.xml" rel="self" type="application/rss+xml" />
+    <author></author>
+    <rights>(C) 2016</rights>
+    <updated>2016-08-06 14:38:12 &#43;0800 CST</updated>
+
     
-    <item>
-      <title>git proxy</title>
-      <link>http://qingyunha.github.com/hugo/wiki/git-proxy/</link>
-      <pubDate>Sat, 06 Aug 2016 14:38:12 +0800</pubDate>
       
-      <guid>http://qingyunha.github.com/hugo/wiki/git-proxy/</guid>
-      <description>
-
-&lt;p&gt;Git支持多种传输协议，ssh、git、HTTP(S)，甚至ftp，rsync。&lt;/p&gt;
-
-&lt;p&gt;当使用不同传输方式时，设置代理的方式也不同。&lt;/p&gt;
-
-&lt;h2 id=&#34;ssh&#34;&gt;SSH&lt;/h2&gt;
-
-&lt;p&gt;当使用SSH协议时，git实际上直接使用ssh命令，所以我们只要给ssh设置好代理就可以了。在~/.ssh/config中：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Host github.com
-    User                    git
-    ProxyCommand            nc -x localhost:1080 %h %p
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;参见ssh_config(5)manual&lt;/p&gt;
-
-&lt;h2 id=&#34;http-s&#34;&gt;HTTP(S)&lt;/h2&gt;
-
-&lt;p&gt;git使用&lt;code&gt;libcurl&lt;/code&gt;来处理HTTP和HTTPS，可以通过设置git的&lt;code&gt;http.proxy&lt;/code&gt;选项：&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;git config --global http.proxy socks5://localhost:1080&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;参见curl(1)的&amp;ndash;proxy选项和git-config(1)中的http.proxy&lt;/p&gt;
-
-&lt;h2 id=&#34;git&#34;&gt;Git&lt;/h2&gt;
-
-&lt;p&gt;当使用git传输协议时，你可以设置git的&lt;code&gt;gitproxy&lt;/code&gt;选项：&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;git config --global core.gitproxy git-proxy&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;这里的git-proxy是任何一个可执行文件，同时它要能接受2个参数，host、port（git服务器的地址和端口）。git-proxy完成代理工作。&lt;/p&gt;
-
-&lt;p&gt;例如这样一个shell脚本：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;#!/usr/bin/env bash
-
-nc -x localhost:1080 $1 $2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;参见git_config(1)&lt;/p&gt;
-
-&lt;h2 id=&#34;如何判断git使用何种协议&#34;&gt;如何判断git使用何种协议&lt;/h2&gt;
-
-&lt;p&gt;根据git服务器的url就可以看出：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;ssh://[user@]host.xz[:port]/path/to/repo.git/&lt;/li&gt;
-&lt;li&gt;git://host.xz[:port]/path/to/repo.git/&lt;/li&gt;
-&lt;li&gt;http[s]://host.xz[:port]/path/to/repo.git/&lt;/li&gt;
-&lt;li&gt;ftp[s]://host.xz[:port]/path/to/repo.git/&lt;/li&gt;
-&lt;li&gt;rsync://host.xz/path/to/repo.git/&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;对于SSH协议，还有一种类似scp的语法：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;[user@]host.xz:path/to/repo.git/&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;参见git-fetch(1)的GIT URLS&lt;/p&gt;
-
-&lt;h2 id=&#34;nc命令&#34;&gt;nc命令&lt;/h2&gt;
-
-&lt;p&gt;nc(netcat)可以用 -X 指定代理方式：socks4、 sockes5、 HTTPS CONNECT，默认为socks5。 -x 指定代理地址。&lt;/p&gt;
-
-&lt;p&gt;参见nc(1)&lt;/p&gt;
-
-&lt;h3 id=&#34;reference&#34;&gt;reference&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://cms-sw.github.io/tutorial-proxy.html&#34;&gt;Tutorial: how to use git through a proxy&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
     
+
   </channel>
 </rss>

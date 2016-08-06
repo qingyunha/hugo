@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.16" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Noticia+Text:400,700|Marcellus+SC'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    <link rel="stylesheet" href="http://qingyunha.github.com/hugo/css/styles.css">
+    <link rel="stylesheet" href="http://qingyunha.github.com/hugo/css/custom.css">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://qingyunha.github.com/hugo/index.xml">
+
+    
+    <title>A Python Interpreter Written in Python - My Site</title>
+    <meta property='og:title' content="A Python Interpreter Written in Python - My Site">
+    <meta property="og:type" content="article">
+    
+
+    <meta property="og:url" content="http://qingyunha.github.com/hugo/translation/python-interpreter/">
+    
+    
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage":{
+      "@type":"WebPage",
+      "@id":"http:\/\/qingyunha.github.com\/hugo\/"
+    },
+    "headline": "A Python Interpreter Written in Python |  ",
+    "image": {
+      "@type": "ImageObject",
+      "url": "",
+      "height": 700,
+      "width": 700
+    },
+    "datePublished": "2016-05-09T11:32:25JST",
+    "dateModified": "2016-05-09T11:32:25JST",
+    "author": {
+      "@type": "Person",
+      "name": "",
+      "image": "http:\/\/qingyunha.github.com\/hugo\/images/logo.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http:\/\/qingyunha.github.com\/hugo\/images/logo.png",
+        "height": 60,
+        "width": 60
+      }
+    },
+    "description": ""
+  }
+</script>
+</head>
+
+<body>
+
+  <header class="l-header">
+    <div class="p-logo">
+      <a href="http://qingyunha.github.com/hugo/">My Site</a>
+    </div>
+  </header>
+
+
+
+<div class="container">
+
+  <div class="row">
+    <div class="col-md-9">
+
+      <article class="single">
+        <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+        <div class="body">
+          <h1>A Python Interpreter Written in Python</h1>
+          
+
+<p><em>Allison是Dropbox的工程师，在那里她维护着世界上最大的由Python客户组成的网络。在Dropbox之前，她是Recurse Center的导师, 曾在纽约写作。在北美的PyCon做过关于Python内部机制的演讲，并且她喜欢奇怪的bugs。她的博客地址是<a href="http://akaptur.com">akaptur.com</a>.</em></p>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Byterun是一个用Python实现的Python解释器。随着我在Byterun上的工作，我惊讶并很高兴地的发现，这个Python解释器的基础结构可以满足500行的限制。在这一章我们会搞清楚这个解释器的结构，给你足够的知识探索下去。我们的目标不是向你展示解释器的每个细节&mdash;像编程和计算机科学其他有趣的领域一样，你可能会投入几年的时间去搞清楚这个主题。</p>
+
+<p>Byterun是Ned Batchelder和我完成的，建立在Paul Swartz的工作之上。它的结构和主要的Python实现（CPython）差不多，所以理解Byterun会帮助你理解大多数解释器特别是CPython解释器。（如果你不知道你用的是什么Python，那么很可能它就是CPython）。尽管Byterun很小，但它能执行大多数简单的Python程序。</p>
+
+<h3 id="a-python-interpreter">A Python Interpreter</h3>
+
+<p>在开始之前，让我们缩小一下“Pyhton解释器”的意思。在讨论Python的时候，“解释器”这个词可以用在很多不同的地方。有的时候解释器指的是REPL，当你在命令行下敲下<code>python</code>时所得到的交互式环境。有时候人们会相互替代的使用Python解释器和Python来说明执行Python代码的这一过程。在本章，“解释器”有一个更精确的意思：执行Python程序过程中的最后一步。</p>
+
+<p>在解释器接手之前，Python会执行其他3个步骤：词法分析，语法解析和编译。这三步合起来把源代码转换成<em>code object</em>,它包含着解释器可以理解的指令。而解释器的工作就是解释code object中的指令。</p>
+
+<p>你可能很奇怪执行Python代码会有编译这一步。Python通常被称为解释型语言，就像Ruby，Perl一样，它们和编译型语言相对，比如C，Rust。然而，这里的术语并不是它看起来的那样精确。大多数解释型语言包括Python，确实会有编译这一步。而Python被称为解释型的原因是相对于编译型语言，它在编译这一步的工作相对较少（解释器做相对多的工作）。在这章后面你会看到，Python的编译器比C语言编译器需要更少的关于程序行为的信息。</p>
+
+<h3 id="a-python-python-interpreter">A Python Python Interpreter</h3>
+
+<p>Byterun是一个用Python写的Python解释器，这点可能让你感到奇怪，但没有比用C语言写C语言编译器更奇怪。（事实上，广泛使用的gcc编译器就是用C语言本身写的）你可以用几乎的任何语言写一个Python解释器。</p>
+
+<p>用Python写Python既有优点又有缺点。最大的缺点就是速度：用Byterun执行代码要比用CPython执行慢的多，CPython解释器是用C语言实现的并做了优化。然而Byterun是为了学习而设计的，所以速度对我们不重要。使用Python最大优点是我们可以*仅仅*实现解释器，而不用担心Python运行时的部分，特别是对象系统。比如当Byterun需要创建一个类时，它就会回退到“真正”的Python。另外一个优势是Byterun很容易理解，部分原因是它是用高级语言写的（Python！）（另外我们不会对解释器做优化 &mdash; 再一次，清晰和简单比速度更重要）</p>
+
+<h2 id="building-an-interpreter">Building an Interpreter</h2>
+
+<p>在我们考察Byterun代码之前，我们需要一些对解释器结构的高层次视角。Python解释器是如何工作的？</p>
+
+<p>Python解释器是一个<em>虚拟机</em>,模拟真实计算机的软件。我们这个虚拟机是栈机器，它用几个栈来完成操作（与之相对的是寄存器机器，它从特定的内存地址读写数据）。</p>
+
+<p>Python解释器是一个_字节码解释器_：它的输入是一些命令集合称作_字节码_。当你写Python代码时，词法分析器，语法解析器和编译器生成code object让解释器去操作。每个code object都包含一个要被执行的指令集合 &mdash; 它就是字节码 &mdash; 另外还有一些解释器需要的信息。字节码是Python代码的一个_中间层表示_：它以一种解释器可以理解的方式来表示源代码。这和汇编语言作为C语言和机器语言的中间表示很类似。</p>
+
+<h3 id="a-tiny-interpreter">A Tiny Interpreter</h3>
+
+<p>为了让说明更具体，让我们从一个非常小的解释器开始。它只能计算两个数的和，只能理解三个指令。它执行的所有代码只是这三个指令的不同组合。下面就是这三个指令：</p>
+
+<ul>
+<li><code>LOAD_VALUE</code></li>
+<li><code>ADD_TWO_VALUES</code></li>
+<li><code>PRINT_ANSWER</code></li>
+</ul>
+
+<p>我们不关心词法，语法和编译，所以我们也不在乎这些指令是如何产生的。你可以想象，你写下<code>7 + 5</code>，然后一个编译器为你生成那三个指令的组合。如果你有一个合适的编译器，你甚至可以用Lisp的语法来写，只要它能生成相同的指令。</p>
+
+<p>假设</p>
+
+<pre><code class="language-python">7 + 5
+</code></pre>
+
+<p>生成这样的指令集：</p>
+
+<pre><code class="language-python">what_to_execute = {
+    &quot;instructions&quot;: [(&quot;LOAD_VALUE&quot;, 0),  # the first number
+                     (&quot;LOAD_VALUE&quot;, 1),  # the second number
+                     (&quot;ADD_TWO_VALUES&quot;, None),
+                     (&quot;PRINT_ANSWER&quot;, None)],
+    &quot;numbers&quot;: [7, 5] }
+</code></pre>
+
+<p>Python解释器是一个_栈机器_，所以它必须通过操作栈来完成这个加法。(\aosafigref{500l.interpreter.stackmachine}.)解释器先执行第一条指令，<code>LOAD_VALUE</code>，把第一个数压到栈中。接着它把第二个数也压到栈中。然后，第三条指令，<code>ADD_TWO_VALUES</code>,先把两个数从栈中弹出，加起来，再把结果压入栈中。最后一步，把结果弹出并输出。</p>
+
+<p>\aosafigure[240pt]{interpreter-images/interpreter-stack.png}{A stack machine}{500l.interpreter.stackmachine}</p>
+
+<p><code>LOAD_VALUE</code>这条指令告诉解释器把一个数压入栈中，但指令本身并没有指明这个数是多少。指令需要一个额外的信息告诉解释器去哪里找到这个数。所以我们的指令集有两个部分：指令本身和一个常量列表。（在Python中，字节码就是我们称为的“指令”，而解释器执行的是_code object_。）</p>
+
+<p>为什么不把数字直接嵌入指令之中？想象一下，如果我们加的不是数字，而是字符串。我们可不想把字符串这样的东西加到指令中，因为它可以有任意的长度。另外，我们这种设计也意味着我们只需要对象的一份拷贝，比如这个加法 <code>7 + 7</code>, 现在常量表 <code>&quot;numbers&quot;</code>只需包含一个<code>7</code>。</p>
+
+<p>你可能会想为什么会需要除了<code>ADD_TWO_VALUES</code>之外的指令。的确，对于我们两个数加法，这个例子是有点人为制作的意思。然而，这个指令却是建造更复杂程序的轮子。比如，就我们目前定义的三个指令，只要给出正确的指令组合，我们可以做三个数的加法，或者任意个数的加法。同时，栈提供了一个清晰的方法去跟踪解释器的状态，这为我们增长的复杂性提供了支持。</p>
+
+<p>现在让我们来完成我们的解释器。解释器对象需要一个栈，它可以用一个列表来表示。它还需要一个方法来描述怎样执行每条指令。比如，<code>LOAD_VALUE</code>会把一个值压入栈中。</p>
+
+<pre><code class="language-python">class Interpreter:
+    def __init__(self):
+        self.stack = []
+
+    def LOAD_VALUE(self, number):
+        self.stack.append(number)
+
+    def PRINT_ANSWER(self):
+        answer = self.stack.pop()
+        print(answer)
+
+    def ADD_TWO_VALUES(self):
+        first_num = self.stack.pop()
+        second_num = self.stack.pop()
+        total = first_num + second_num
+        self.stack.append(total)
+</code></pre>
+
+<p>这三个方法完成了解释器所理解的三条指令。但解释器还需要一样东西：一个能把所有东西结合在一起并执行的方法。这个方法就叫做<code>run_code</code>, 它把我们前面定义的字典结构<code>what-to-execute</code>作为参数，循环执行里面的每条指令，如何指令有参数，处理参数，然后调用解释器对象中相应的方法。</p>
+
+<pre><code class="language-python">    def run_code(self, what_to_execute):
+        instructions = what_to_execute[&quot;instructions&quot;]
+        numbers = what_to_execute[&quot;numbers&quot;]
+        for each_step in instructions:
+            instruction, argument = each_step
+            if instruction == &quot;LOAD_VALUE&quot;:
+                number = numbers[argument]
+                self.LOAD_VALUE(number)
+            elif instruction == &quot;ADD_TWO_VALUES&quot;:
+                self.ADD_TWO_VALUES()
+            elif instruction == &quot;PRINT_ANSWER&quot;:
+                self.PRINT_ANSWER()
+</code></pre>
+
+<p>为了测试，我们创建一个解释器对象，然后用前面定义的 7 + 5 的指令集来调用<code>run_code</code>。</p>
+
+<pre><code class="language-python">    interpreter = Interpreter()
+    interpreter.run_code(what_to_execute)
+</code></pre>
+
+<p>显然，它会输出12</p>
+
+<p>尽管我们的解释器功能受限，但这个加法过程几乎和真正的Python解释器是一样的。这里，我们还有几点要注意。</p>
+
+<p>首先，一些指令需要参数。在真正的Python bytecode中，大概有一半的指令有参数。像我们的例子一样，参数和指令打包在一起。注意_指令_的参数和传递给对应方法的参数是不同的。</p>
+
+<p>第二，指令<code>ADD_TWO_VALUES</code>不需要任何参数，它从解释器栈中弹出所需的值。这正是以栈为基础的解释器的特点。</p>
+
+<p>记得我们说过只要给出合适的指令集，不需要对解释器做任何改变，我们就能做多个数的加法。考虑下面的指令集，你觉得会发生什么？如果你有一个合适的编译器，什么代码才能编译出下面的指令集？</p>
+
+<pre><code class="language-python">    what_to_execute = {
+        &quot;instructions&quot;: [(&quot;LOAD_VALUE&quot;, 0),
+                         (&quot;LOAD_VALUE&quot;, 1),
+                         (&quot;ADD_TWO_VALUES&quot;, None),
+                         (&quot;LOAD_VALUE&quot;, 2),
+                         (&quot;ADD_TWO_VALUES&quot;, None),
+                         (&quot;PRINT_ANSWER&quot;, None)],
+        &quot;numbers&quot;: [7, 5, 8] }
+</code></pre>
+
+<p>从这点出发，我们开始看到这种结构的可扩展性：我们可以通过向解释器对象增加方法来描述更多的操作（只要有一个编译器能为我们生成组织良好的指令集）。</p>
+
+<h3 id="variables">Variables</h3>
+
+<p>接下来给我们的解释器增加变量的支持。我们需要一个保存变量值的指令，<code>STORE_NAME</code>;一个取变量值的指令<code>LOAD_NAME</code>;和一个变量到值的映射关系。目前，我们会忽略命名空间和作用域，所以我们可以把变量和值的映射直接存储在解释器对象中。最后，我们要保证<code>what_to_execute</code>除了一个常量列表，还要有个变量名字的列表。</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; def s():
+...     a = 1
+...     b = 2
+...     print(a + b)
+# a friendly compiler transforms `s` into:
+    what_to_execute = {
+        &quot;instructions&quot;: [(&quot;LOAD_VALUE&quot;, 0),
+                         (&quot;STORE_NAME&quot;, 0),
+                         (&quot;LOAD_VALUE&quot;, 1),
+                         (&quot;STORE_NAME&quot;, 1),
+                         (&quot;LOAD_NAME&quot;, 0),
+                         (&quot;LOAD_NAME&quot;, 1),
+                         (&quot;ADD_TWO_VALUES&quot;, None),
+                         (&quot;PRINT_ANSWER&quot;, None)],
+        &quot;numbers&quot;: [1, 2],
+        &quot;names&quot;:   [&quot;a&quot;, &quot;b&quot;] }
+</code></pre>
+
+<p>我们的新的的实现在下面。为了跟踪哪名字绑定到那个值，我们在<code>__init__</code>方法中增加一个<code>environment</code>字典。我们也增加了<code>STORE_NAME</code>和<code>LOAD_NAME</code>方法，它们获得变量名，然后从<code>environment</code>字典中设置或取出这个变量值。</p>
+
+<p>现在指令参数就有两个不同的意思，它可能是<code>numbers</code>列表的索引，也可能是<code>names</code>列表的索引。解释器通过检查所执行的指令就能知道是那种参数。而我们打破这种逻辑 ，把指令和它所用何种参数的映射关系放在另一个单独的方法中。</p>
+
+<pre><code class="language-python">class Interpreter:
+    def __init__(self):
+        self.stack = []
+        self.environment = {}
+
+    def STORE_NAME(self, name):
+        val = self.stack.pop()
+        self.environment[name] = val
+
+    def LOAD_NAME(self, name):
+        val = self.environment[name]
+        self.stack.append(val)
+
+    def parse_argument(self, instruction, argument, what_to_execute):
+        &quot;&quot;&quot; Understand what the argument to each instruction means.&quot;&quot;&quot;
+        numbers = [&quot;LOAD_VALUE&quot;]
+        names = [&quot;LOAD_NAME&quot;, &quot;STORE_NAME&quot;]
+
+        if instruction in numbers:
+            argument = what_to_execute[&quot;numbers&quot;][argument]
+        elif instruction in names:
+            argument = what_to_execute[&quot;names&quot;][argument]
+
+        return argument
+
+    def run_code(self, what_to_execute):
+        instructions = what_to_execute[&quot;instructions&quot;]
+        for each_step in instructions:
+            instruction, argument = each_step
+            argument = self.parse_argument(instruction, argument, what_to_execute)
+
+            if instruction == &quot;LOAD_VALUE&quot;:
+                self.LOAD_VALUE(argument)
+            elif instruction == &quot;ADD_TWO_VALUES&quot;:
+                self.ADD_TWO_VALUES()
+            elif instruction == &quot;PRINT_ANSWER&quot;:
+                self.PRINT_ANSWER()
+            elif instruction == &quot;STORE_NAME&quot;:
+                self.STORE_NAME(argument)
+            elif instruction == &quot;LOAD_NAME&quot;:
+                self.LOAD_NAME(argument)
+</code></pre>
+
+<p>仅仅五个指令，<code>run_code</code>这个方法已经开始变得冗长了。如果保持这种结构，那么每条指令都需要一个<code>if</code>分支。这里，我们要利用Python的动态方法查找。我们总会给一个称为<code>FOO</code>的指令定义一个名为<code>FOO</code>的方法，这样我们就可用Python的<code>getattr</code>函数在运行时动态查找方法，而不用这个大大的分支结构。<code>run_code</code>方法现在是这样：</p>
+
+<pre><code class="language-python">    def execute(self, what_to_execute):
+        instructions = what_to_execute[&quot;instructions&quot;]
+        for each_step in instructions:
+            instruction, argument = each_step
+            argument = self.parse_argument(instruction, argument, what_to_execute)
+            bytecode_method = getattr(self, instruction)
+            if argument is None:
+                bytecode_method()
+            else:
+                bytecode_method(argument)
+</code></pre>
+
+<h2 id="real-python-bytecode">Real Python Bytecode</h2>
+
+<p>现在，放弃我们的小指令集，去看看真正的Python字节码。字节码的结构和我们的小解释器的指令集差不多，除了字节码用一个字节而不是一个名字来指示这条指令。为了理解它的结构，我们将考察一个函数的字节码。考虑下面这个例子：</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; def cond():
+...     x = 3
+...     if x &lt; 5:
+...         return 'yes'
+...     else:
+...         return 'no'
+...
+</code></pre>
+
+<p>Python在运行时会暴露一大批内部信息，并且我们可以通过REPL直接访问这些信息。对于函数对象<code>cond</code>，<code>cond.__code__</code>是与其关联的code object，而<code>cond.__code__.co_code</code>就是它的字节码。当你写Python代码时，你永远也不会想直接使用这些属性，但是这可以让我们做出各种恶作剧，同时也可以看看内部机制。</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; cond.__code__.co_code  # the bytecode as raw bytes
+b'd\x01\x00}\x00\x00|\x00\x00d\x02\x00k\x00\x00r\x16\x00d\x03\x00Sd\x04\x00Sd\x00
+   \x00S'
+&gt;&gt;&gt; list(cond.__code__.co_code)  # the bytecode as numbers
+[100, 1, 0, 125, 0, 0, 124, 0, 0, 100, 2, 0, 107, 0, 0, 114, 22, 0, 100, 3, 0, 83, 
+ 100, 4, 0, 83, 100, 0, 0, 83]
+</code></pre>
+
+<p>当我们直接输出这个字节码，它看起来完全无法理解 &mdash; 唯一我们了解的是它是一串字节。很幸运，我们有一个很强大的工具可以用：Python标准库中的<code>dis</code>模块。</p>
+
+<p><code>dis</code>是一个字节码反汇编器。反汇编器以为机器而写的底层代码作为输入，比如汇编代码和字节码，然后以人类可读的方式输出。当我们运行<code>dis.dis</code>, 它输出每个字节码的解释。</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; dis.dis(cond)
+  2           0 LOAD_CONST               1 (3)
+              3 STORE_FAST               0 (x)
+
+  3           6 LOAD_FAST                0 (x)
+              9 LOAD_CONST               2 (5)
+             12 COMPARE_OP               0 (&lt;)
+             15 POP_JUMP_IF_FALSE       22
+
+  4          18 LOAD_CONST               3 ('yes')
+             21 RETURN_VALUE
+
+  6     &gt;&gt;   22 LOAD_CONST               4 ('no')
+             25 RETURN_VALUE
+             26 LOAD_CONST               0 (None)
+             29 RETURN_VALUE
+</code></pre>
+
+<p>这些都是什么意思？让我们以第一条指令<code>LOAD_CONST</code>为例子。第一列的数字（<code>2</code>）表示对应源代码的行数。第二列的数字是字节码的索引，告诉我们指令<code>LOAD_CONST</code>在0位置。第三列是指令本身对应的人类可读的名字。如果第四列存在，它表示指令的参数。如果第5列存在，它是一个关于参数是什么的提示。</p>
+
+<p>考虑这个字节码的前几个字节：[100, 1, 0, 125, 0, 0]。这6个字节表示两条带参数的指令。我们可以使用<code>dis.opname</code>，一个字节到可读字符串的映射，来找到指令100和指令125代表是什么：</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; dis.opname[100]
+'LOAD_CONST'
+&gt;&gt;&gt; dis.opname[125]
+'STORE_FAST'
+</code></pre>
+
+<p>第二和第三个字节 &mdash; 1 ，0 &mdash;是<code>LOAD_CONST</code>的参数，第五和第六个字节 &mdash; 0，0 &mdash; 是<code>STORE_FAST</code>的参数。就像我们前面的小例子，<code>LOAD_CONST</code>需要知道的到哪去找常量，<code>STORE_FAST</code>需要找到名字。（Python的<code>LOAD_CONST</code>和我们小例子中的<code>LOAD_VALUE</code>一样，<code>LOAD_FAST</code>和<code>LOAD_NAME</code>一样）。所以这六个字节代表第一行源代码<code>x = 3</code>.(为什么用两个字节表示指令的参数？如果Python使用一个字节，每个code object你只能有256个常量/名字，而用两个字节，就增加到了256的平方，65536个）。</p>
+
+<h3 id="conditionals-and-loops">Conditionals and Loops</h3>
+
+<p>到目前为止，我们的解释器只能一条接着一条的执行指令。这有个问题，我们经常会想多次执行某个指令，或者在特定的条件下跳过它们。为了可以写循环和分支结构，解释器必须能够在指令中跳转。在某种程度上，Python在字节码中使用<code>GOTO</code>语句来处理循环和分支！让我们再看一个<code>cond</code>函数的反汇编结果：</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; dis.dis(cond)
+  2           0 LOAD_CONST               1 (3)
+              3 STORE_FAST               0 (x)
+
+  3           6 LOAD_FAST                0 (x)
+              9 LOAD_CONST               2 (5)
+             12 COMPARE_OP               0 (&lt;)
+             15 POP_JUMP_IF_FALSE       22
+
+  4          18 LOAD_CONST               3 ('yes')
+             21 RETURN_VALUE
+
+  6     &gt;&gt;   22 LOAD_CONST               4 ('no')
+             25 RETURN_VALUE
+             26 LOAD_CONST               0 (None)
+             29 RETURN_VALUE
+</code></pre>
+
+<p>第三行的条件表达式<code>if x &lt; 5</code>被编译成四条指令：<code>LOAD_FAST</code>, <code>LOAD_CONST</code>, <code>COMPARE_OP</code>和 <code>POP_JUMP_IF_FALSE</code>。<code>x &lt; 5</code>对应加载<code>x</code>，加载5，比较这两个值。指令<code>POP_JUMP_IF_FALSE</code>完成<code>if</code>语句。这条指令把栈顶的值弹出，如果值为真，什么都不发生。如果值为假，解释器会跳转到另一条指令。</p>
+
+<p>这条将被加载的指令称为跳转目标，它作为指令<code>POP_JUMP</code>的参数。这里，跳转目标是22，索引为22的指令是<code>LOAD_CONST</code>,对应源码的第6行。（<code>dis</code>用<code>&gt;&gt;</code>标记跳转目标。）如果<code>X &lt; 5</code>为假，解释器会忽略第四行（<code>return yes</code>）,直接跳转到第6行（<code>return &quot;no&quot;</code>）。因此解释器通过跳转指令选择性的执行指令。</p>
+
+<p>Python的循环也依赖于跳转。在下面的字节码中，<code>while x &lt; 5</code>这一行产生了和<code>if x &lt; 10</code>几乎一样的字节码。在这两种情况下，解释器都是先执行比较，然后执行<code>POP_JUMP_IF_FALSE</code>来控制下一条执行哪个指令。第四行的最后一条字节码<code>JUMP_ABSOLUT</code>(循环体结束的地方），让解释器返回到循环开始的第9条指令处。当 <code>x &lt; 10</code>变为假，<code>POP_JUMP_IF_FALSE</code>会让解释器跳到循环的终止处，第34条指令。</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; def loop():
+...      x = 1
+...      while x &lt; 5:
+...          x = x + 1
+...      return x
+...
+&gt;&gt;&gt; dis.dis(loop)
+  2           0 LOAD_CONST               1 (1)
+              3 STORE_FAST               0 (x)
+
+  3           6 SETUP_LOOP              26 (to 35)
+        &gt;&gt;    9 LOAD_FAST                0 (x)
+             12 LOAD_CONST               2 (5)
+             15 COMPARE_OP               0 (&lt;)
+             18 POP_JUMP_IF_FALSE       34
+
+  4          21 LOAD_FAST                0 (x)
+             24 LOAD_CONST               1 (1)
+             27 BINARY_ADD
+             28 STORE_FAST               0 (x)
+             31 JUMP_ABSOLUTE            9
+        &gt;&gt;   34 POP_BLOCK
+
+  5     &gt;&gt;   35 LOAD_FAST                0 (x)
+             38 RETURN_VALUE
+</code></pre>
+
+<h3 id="explore-bytecode">Explore Bytecode</h3>
+
+<p>我希望你用<code>dis.dis</code>来试试你自己写的函数。一些有趣的问题值得探索：</p>
+
+<ul>
+<li>对解释器而言for循环和while循环有什么不同？</li>
+<li>能不能写出两个不同函数，却能产生相同的字节码?</li>
+<li><code>elif</code>是怎么工作的？列表推导呢？</li>
+</ul>
+
+<h2 id="frames">Frames</h2>
+
+<p>到目前为止，我们已经知道了Python虚拟机是一个栈机器。它能顺序执行指令，在指令间跳转，压入或弹出栈值。但是这和我们期望的解释器还有一定距离。在前面的那个例子中，最后一条指令是<code>RETURN_VALUE</code>,它和<code>return</code>语句相对应。但是它返回到哪里去呢？</p>
+
+<p>为了回答这个问题，我们必须再增加一层复杂性：frame。一个frame是一些信息的集合和代码的执行上下文。frames在Python代码执行时动态的创建和销毁。每个frame对应函数的一次调用。&mdash; 所以每个frame只有一个code object与之关联，而一个code object可以有多个frame。比如你有一个函数递归的调用自己10次，这会产生11个frame，每次调用对应一个，再加上启动模块对应的一个frame。总的来说，Python程序的每个作用域有一个frame，比如，模块，函数，类。</p>
+
+<p>Frame存在于_调用栈_中，一个和我们之前讨论的完全不同的栈。（你最熟悉的栈就是调用栈，就是你经常看到的异常回溯，每个以&rdquo;File &lsquo;program.py&rsquo;&ldquo;开始的回溯对应一个frame。）解释器在执行字节码时操作的栈，我们叫它_数据栈_。其实还有第三个栈，叫做_块栈_，用于特定的控制流块，比如循环和异常处理。调用栈中的每个frame都有它自己的数据栈和块栈。</p>
+
+<p>让我们用一个具体的例子来说明。假设Python解释器执行到标记为3的地方。解释器正在<code>foo</code>函数的调用中，它接着调用<code>bar</code>。下面是frame调用栈，块栈和数据栈的示意图。我们感兴趣的是解释器先从最底下的<code>foo()</code>开始，接着执行<code>foo</code>的函数体，然后到达<code>bar</code>。</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; def bar(y):
+...     z = y + 3     # &lt;--- (3) ... and the interpreter is here.
+...     return z
+...
+&gt;&gt;&gt; def foo():
+...     a = 1
+...     b = 2
+...     return a + bar(b) # &lt;--- (2) ... which is returning a call to bar ...
+...
+&gt;&gt;&gt; foo()             # &lt;--- (1) We're in the middle of a call to foo ...
+3
+</code></pre>
+
+<p>\aosafigure[240pt]{interpreter-images/interpreter-callstack.png}{The call stack}{500l.interpreter.callstack}</p>
+
+<p>现在，解释器在<code>bar</code>函数的调用中。调用栈中有3个frame：一个对应于模块层，一个对应函数<code>foo</code>,别一个对应函数<code>bar</code>。(\aosafigref{500l.interpreter.callstack}.)一旦<code>bar</code>返回，与它对应的frame就会从调用栈中弹出并丢弃。</p>
+
+<p>字节码指令<code>RETURN_VALUE</code>告诉解释器在frame间传递一个值。首先，它把位于调用栈栈顶的frame中的数据栈的栈顶值弹出。然后把整个frame弹出丢弃。最后把这个值压到下一个frame的数据栈中。</p>
+
+<p>当Ned Batchelder和我在写Byterun时，很长一段时间我们的实现中一直有个重大的错误。我们整个虚拟机中只有一个数据栈，而不是每个frame都有一个。我们写了很多测试代码，同时在Byterun和真正的Python上运行，希望得到一致结果。我们几乎通过了所有测试，只有一样东西不能通过，那就是生成器。最后，通过仔细的阅读CPython的源码，我们发现了错误所在<sup class="footnote-ref" id="fnref:thanks"><a rel="footnote" href="#fn:thanks">1</a></sup>。把数据栈移到每个frame就解决了这个问题。</p>
+
+<p>回头在看看这个bug，我惊讶的发现Python真的很少依赖于每个frame有一个数据栈这个特性。在Python中几乎所有的操作都会清空数据栈，所以所有的frame公用一个数据栈是没问题的。在上面的例子中，当<code>bar</code>执行完后，它的数据栈为空。即使<code>foo</code>公用这一个栈，它的值也不会受影响。然而，对应生成器，一个关键的特点是它能暂停一个frame的执行，返回到其他的frame，一段时间后它能返回到原来的frame，并以它离开时的相同状态继续执行。</p>
+
+<h2 id="byterun">Byterun</h2>
+
+<p>现在我们有足够的Python解释器的知识背景去考察Byterun。</p>
+
+<p>Byterun中有四种对象。</p>
+
+<ul>
+<li><code>VirtualMachine</code>类，它管理高层结构，frame调用栈，指令到操作的映射。这是一个比前面<code>Inteprter</code>对象更复杂的版本。</li>
+<li><code>Frame</code>类，每个<code>Frame</code>类都有一个code object，并且管理者其他一些必要的状态信息，全局和局部命名空间，指向调用它的frame的指针和最后执行的字节码指令。</li>
+<li><code>Function</code>类，它被用来代替真正的Python函数。回想一下，调用函数时会创建一个新的frame。我们自己实现<code>Function</code>，所以我们控制新frame的创建。</li>
+<li><code>Block</code>类，它只是包装了block的3个属性。（block的细节不是解释器的核心，我们不会花时间在它身上，把它列在这里，是因为Byterun需要它。）</li>
+</ul>
+
+<h3 id="the-virtualmachine-class">The <code>VirtualMachine</code> Class</h3>
+
+<p>程序运行时只有一个<code>VirtualMachine</code>被创建，因为我们只有一个解释器。<code>VirtualMachine</code>保存调用栈，异常状态，在frame中传递的返回值。它的入口点是<code>run_code</code>方法，它以编译后的code object为参数，以创建一个frame为开始，然后运行这个frame。这个frame可能再创建出新的frame；调用栈随着程序的运行增长缩短。当第一个frame返回时，执行结束。</p>
+
+<pre><code class="language-python">class VirtualMachineError(Exception):
+    pass
+
+class VirtualMachine(object):
+    def __init__(self):
+        self.frames = []   # The call stack of frames.
+        self.frame = None  # The current frame.
+        self.return_value = None
+        self.last_exception = None
+
+    def run_code(self, code, global_names=None, local_names=None):
+        &quot;&quot;&quot; An entry point to execute code using the virtual machine.&quot;&quot;&quot;
+        frame = self.make_frame(code, global_names=global_names, 
+                                local_names=local_names)
+        self.run_frame(frame)
+
+</code></pre>
+
+<h3 id="the-frame-class">The <code>Frame</code> Class</h3>
+
+<p>接下来，我们来写<code>Frame</code>对象。frame是一个属性的集合，它没有任何方法。前面提到过，这些属性包括由编译器生成的code object；局部，全局和内置命名空间；前一个frame的引用；一个数据栈；一个块栈；最后执行的指令指针。（对于内置命名空间我们需要多做一点工作，Python在不同模块中对这个命名空间有不同的处理；但这个细节对我们的虚拟机不重要。）</p>
+
+<pre><code class="language-python">class Frame(object):
+    def __init__(self, code_obj, global_names, local_names, prev_frame):
+        self.code_obj = code_obj
+        self.global_names = global_names
+        self.local_names = local_names
+        self.prev_frame = prev_frame
+        self.stack = []
+        if prev_frame:
+            self.builtin_names = prev_frame.builtin_names
+        else:
+            self.builtin_names = local_names['__builtins__']
+            if hasattr(self.builtin_names, '__dict__'):
+                self.builtin_names = self.builtin_names.__dict__
+
+        self.last_instruction = 0
+        self.block_stack = []
+</code></pre>
+
+<p>接着，我们在虚拟机中增加对frame的操作。这有3个帮助函数：一个创建新的frame的方法，和压栈和出栈的方法。第四个函数，<code>run_frame</code>,完成执行frame的主要工作，待会我们再讨论这个方法。</p>
+
+<pre><code class="language-python">class VirtualMachine(object):
+    [... snip ...]
+
+    # Frame manipulation
+    def make_frame(self, code, callargs={}, global_names=None, local_names=None):
+        if global_names is not None and local_names is not None:
+            local_names = global_names
+        elif self.frames:
+            global_names = self.frame.global_names
+            local_names = {}
+        else:
+            global_names = local_names = {
+                '__builtins__': __builtins__,
+                '__name__': '__main__',
+                '__doc__': None,
+                '__package__': None,
+            }
+        local_names.update(callargs)
+        frame = Frame(code, global_names, local_names, self.frame)
+        return frame
+
+    def push_frame(self, frame):
+        self.frames.append(frame)
+        self.frame = frame
+
+    def pop_frame(self):
+        self.frames.pop()
+        if self.frames:
+            self.frame = self.frames[-1]
+        else:
+            self.frame = None
+
+    def run_frame(self):
+        pass
+        # we'll come back to this shortly
+</code></pre>
+
+<h3 id="the-function-class">The <code>Function</code> Class</h3>
+
+<p><code>Function</code>的实现有点扭曲，但是大部分的细节对理解解释器不重要。重要的是当调用函数时 &mdash; <code>__call__</code>方法被调用 &mdash; 它创建一个新的<code>Frame</code>并运行它。</p>
+
+<pre><code class="language-python">class Function(object):
+    &quot;&quot;&quot;
+    Create a realistic function object, defining the things the interpreter expects.
+    &quot;&quot;&quot;
+    __slots__ = [
+        'func_code', 'func_name', 'func_defaults', 'func_globals',
+        'func_locals', 'func_dict', 'func_closure',
+        '__name__', '__dict__', '__doc__',
+        '_vm', '_func',
+    ]
+
+    def __init__(self, name, code, globs, defaults, closure, vm):
+        &quot;&quot;&quot;You don't need to follow this closely to understand the interpreter.&quot;&quot;&quot;
+        self._vm = vm
+        self.func_code = code
+        self.func_name = self.__name__ = name or code.co_name
+        self.func_defaults = tuple(defaults)
+        self.func_globals = globs
+        self.func_locals = self._vm.frame.f_locals
+        self.__dict__ = {}
+        self.func_closure = closure
+        self.__doc__ = code.co_consts[0] if code.co_consts else None
+
+        # Sometimes, we need a real Python function.  This is for that.
+        kw = {
+            'argdefs': self.func_defaults,
+        }
+        if closure:
+            kw['closure'] = tuple(make_cell(0) for _ in closure)
+        self._func = types.FunctionType(code, globs, **kw)
+
+    def __call__(self, *args, **kwargs):
+        &quot;&quot;&quot;When calling a Function, make a new frame and run it.&quot;&quot;&quot;
+        callargs = inspect.getcallargs(self._func, *args, **kwargs)
+        # Use callargs to provide a mapping of arguments: values to pass into the new 
+        # frame.
+        frame = self._vm.make_frame(
+            self.func_code, callargs, self.func_globals, {}
+        )
+        return self._vm.run_frame(frame)
+
+def make_cell(value):
+    &quot;&quot;&quot;Create a real Python closure and grab a cell.&quot;&quot;&quot;
+    # Thanks to Alex Gaynor for help with this bit of twistiness.
+    fn = (lambda x: lambda: x)(value)
+    return fn.__closure__[0]
+</code></pre>
+
+<p>接着，回到<code>VirtualMachine</code>对象，我们对数据栈的操作也增加一些帮助方法。字节码操作的栈总是在当前frame的数据栈。这些帮助函数让我们能实现<code>POP_TOP</code>,<code>LOAD_FAST</code>字节码,并且让其他操作栈的指令可读性更高。</p>
+
+<pre><code class="language-python">class VirtualMachine(object):
+    [... snip ...]
+
+    # Data stack manipulation
+    def top(self):
+        return self.frame.stack[-1]
+
+    def pop(self):
+        return self.frame.stack.pop()
+
+    def push(self, *vals):
+        self.frame.stack.extend(vals)
+
+    def popn(self, n):
+        &quot;&quot;&quot;Pop a number of values from the value stack.
+        A list of `n` values is returned, the deepest value first.
+        &quot;&quot;&quot;
+        if n:
+            ret = self.frame.stack[-n:]
+            self.frame.stack[-n:] = []
+            return ret
+        else:
+            return []
+</code></pre>
+
+<p>在我们运行frame之前，我们还需两个方法。</p>
+
+<p>第一个方法，<code>parse_byte_and_args</code>,以一个字节码为输入，先检查它是否有参数，如果有，就解析它的参数。这个方法同时也更新frame的<code>last_instruction</code>属性，它指向最后执行的指令。一条没有参数的指令只有一个字节长度，而有参数的字节有3个字节长。参数的意义依赖于指令是什么。比如，前面说过，指令<code>POP_JUMP_IF_FALSE</code>,它的参数指的是跳转目标。<code>BUILD_LIST</code>, 它的参数是列表的个数。<code>LOAD_CONST</code>,它的参数是常量的索引。</p>
+
+<p>一些指令用简单的数字作为参数。对于另一些，虚拟机需要一点努力去发现它含意。标准库中的<code>dis</code>模块中有一个备忘单，它解释什么参数有什么意思，这让我们的代码更加简洁。比如，列表<code>dis.hasname</code>告诉我们<code>LOAD_NAME</code>, <code>IMPORT_NAME</code>,<code>LOAD_GLOBAL</code>,以及另外的9个指令都有同样的意思：名字列表的索引。</p>
+
+<pre><code class="language-python">class VirtualMachine(object):
+    [... snip ...]
+
+    def parse_byte_and_args(self):
+        f = self.frame
+        opoffset = f.last_instruction
+        byteCode = f.code_obj.co_code[opoffset]
+        f.last_instruction += 1
+        byte_name = dis.opname[byteCode]
+        if byteCode &gt;= dis.HAVE_ARGUMENT:
+            # index into the bytecode
+            arg = f.code_obj.co_code[f.last_instruction:f.last_instruction+2]  
+            f.last_instruction += 2   # advance the instruction pointer
+            arg_val = arg[0] + (arg[1] * 256)
+            if byteCode in dis.hasconst:   # Look up a constant
+                arg = f.code_obj.co_consts[arg_val]
+            elif byteCode in dis.hasname:  # Look up a name
+                arg = f.code_obj.co_names[arg_val]
+            elif byteCode in dis.haslocal: # Look up a local name
+                arg = f.code_obj.co_varnames[arg_val]
+            elif byteCode in dis.hasjrel:  # Calculate a relative jump
+                arg = f.last_instruction + arg_val
+            else:
+                arg = arg_val
+            argument = [arg]
+        else:
+            argument = []
+
+        return byte_name, argument
+</code></pre>
+
+<p>下一个方法是<code>dispatch</code>,它查看给定的指令并执行相应的操作。在CPython中，这个分派函数用一个巨大的switch语句实现，有超过1500行的代码。幸运的是，我们用的是Python，我们的代码会简洁的多。我们会为每一个字节码名字定义一个方法，然后用<code>getattr</code>来查找。就像我们前面的小解释器一样，如果一条指令叫做<code>FOO_BAR</code>，那么它对应的方法就是<code>byte_FOO_BAR</code>。现在，我们先把这些方法当做一个黑盒子。每个指令方法都会返回<code>None</code>或者一个字符串<code>why</code>,有些情况下虚拟机需要这个额外<code>why</code>信息。这些指令方法的返回值，仅作为解释器状态的内部指示，千万不要和执行frame的返回值相混淆。</p>
+
+<pre><code class="language-python">class VirtualMachine(object):
+    [... snip ...]
+
+    def dispatch(self, byte_name, argument):
+        &quot;&quot;&quot; Dispatch by bytename to the corresponding methods.
+        Exceptions are caught and set on the virtual machine.&quot;&quot;&quot;
+
+        # When later unwinding the block stack,
+        # we need to keep track of why we are doing it.
+        why = None
+        try:
+            bytecode_fn = getattr(self, 'byte_%s' % byte_name, None)
+            if bytecode_fn is None:
+                if byte_name.startswith('UNARY_'):
+                    self.unaryOperator(byte_name[6:])
+                elif byte_name.startswith('BINARY_'):
+                    self.binaryOperator(byte_name[7:])
+                else:
+                    raise VirtualMachineError(
+                        &quot;unsupported bytecode type: %s&quot; % byte_name
+                    )
+            else:
+                why = bytecode_fn(*argument)
+        except:
+            # deal with exceptions encountered while executing the op.
+            self.last_exception = sys.exc_info()[:2] + (None,)
+            why = 'exception'
+
+        return why
+
+    def run_frame(self, frame):
+        &quot;&quot;&quot;Run a frame until it returns (somehow).
+        Exceptions are raised, the return value is returned.
+        &quot;&quot;&quot;
+        self.push_frame(frame)
+        while True:
+            byte_name, arguments = self.parse_byte_and_args()
+
+            why = self.dispatch(byte_name, arguments)
+
+            # Deal with any block management we need to do
+            while why and frame.block_stack:
+                why = self.manage_block_stack(why)
+
+            if why:
+                break
+
+        self.pop_frame()
+
+        if why == 'exception':
+            exc, val, tb = self.last_exception
+            e = exc(val)
+            e.__traceback__ = tb
+            raise e
+
+        return self.return_value
+</code></pre>
+
+<h3 id="the-block-class">The <code>Block</code> Class</h3>
+
+<p>在我们完成每个字节码方法前，我们简单的讨论一下块。一个块被用于某种控制流，特别是异常处理和循环。它负责保证当操作完成后数据栈处于正确的状态。比如，在一个循环中，一个特殊的迭代器会存在栈中，当循环完成时它从栈中弹出。解释器需要检查循环仍在继续还是已经停止。</p>
+
+<p>为了跟踪这些额外的信息，解释器设置了一个标志来指示它的状态。我们用一个变量<code>why</code>实现这个标志，它可以是<code>None</code>或者是下面几个字符串这一，<code>&quot;continue&quot;</code>, <code>&quot;break&quot;</code>,<code>&quot;excption&quot;</code>,<code>return</code>。他们指示对块栈和数据栈进行什么操作。回到我们迭代器的例子，如果块栈的栈顶是一个<code>loop</code>块，<code>why</code>是<code>continue</code>,迭代器就因该保存在数据栈上，不是如果<code>why</code>是<code>break</code>,迭代器就会被弹出。</p>
+
+<p>块操作的细节比较精细，我们不会花时间在这上面，但是有兴趣的读者值得仔细的看看。</p>
+
+<pre><code class="language-python">Block = collections.namedtuple(&quot;Block&quot;, &quot;type, handler, stack_height&quot;)
+
+class VirtualMachine(object):
+    [... snip ...]
+
+    # Block stack manipulation
+    def push_block(self, b_type, handler=None):
+        level = len(self.frame.stack)
+        self.frame.block_stack.append(Block(b_type, handler, stack_height))
+
+    def pop_block(self):
+        return self.frame.block_stack.pop()
+
+    def unwind_block(self, block):
+        &quot;&quot;&quot;Unwind the values on the data stack corresponding to a given block.&quot;&quot;&quot;
+        if block.type == 'except-handler':
+            # The exception itself is on the stack as type, value, and traceback.
+            offset = 3  
+        else:
+            offset = 0
+
+        while len(self.frame.stack) &gt; block.level + offset:
+            self.pop()
+
+        if block.type == 'except-handler':
+            traceback, value, exctype = self.popn(3)
+            self.last_exception = exctype, value, traceback
+
+    def manage_block_stack(self, why):
+        &quot;&quot;&quot; &quot;&quot;&quot;
+        frame = self.frame
+        block = frame.block_stack[-1]
+        if block.type == 'loop' and why == 'continue':
+            self.jump(self.return_value)
+            why = None
+            return why
+
+        self.pop_block()
+        self.unwind_block(block)
+
+        if block.type == 'loop' and why == 'break':
+            why = None
+            self.jump(block.handler)
+            return why
+
+        if (block.type in ['setup-except', 'finally'] and why == 'exception'):
+            self.push_block('except-handler')
+            exctype, value, tb = self.last_exception
+            self.push(tb, value, exctype)
+            self.push(tb, value, exctype) # yes, twice
+            why = None
+            self.jump(block.handler)
+            return why
+
+        elif block.type == 'finally':
+            if why in ('return', 'continue'):
+                self.push(self.return_value)
+
+            self.push(why)
+
+            why = None
+            self.jump(block.handler)
+            return why
+        return why
+</code></pre>
+
+<h2 id="the-instructions">The Instructions</h2>
+
+<p>剩下了的就是完成那些指令方法了：<code>byte_LOAD_FAST</code>,<code>byte_BINARY_MODULO</code>等等。而这些指令的实现并不是很有趣，这里我们只展示了一小部分，完整的实现在这儿<a href="https://github.com/nedbat/byterun。（足够执行我们前面所述的所有代码了。）">https://github.com/nedbat/byterun。（足够执行我们前面所述的所有代码了。）</a></p>
+
+<pre><code class="language-python">class VirtualMachine(object):
+    [... snip ...]
+
+    ## Stack manipulation
+
+    def byte_LOAD_CONST(self, const):
+        self.push(const)
+
+    def byte_POP_TOP(self):
+        self.pop()
+
+    ## Names
+    def byte_LOAD_NAME(self, name):
+        frame = self.frame
+        if name in frame.f_locals:
+            val = frame.f_locals[name]
+        elif name in frame.f_globals:
+            val = frame.f_globals[name]
+        elif name in frame.f_builtins:
+            val = frame.f_builtins[name]
+        else:
+            raise NameError(&quot;name '%s' is not defined&quot; % name)
+        self.push(val)
+
+    def byte_STORE_NAME(self, name):
+        self.frame.f_locals[name] = self.pop()
+
+    def byte_LOAD_FAST(self, name):
+        if name in self.frame.f_locals:
+            val = self.frame.f_locals[name]
+        else:
+            raise UnboundLocalError(
+                &quot;local variable '%s' referenced before assignment&quot; % name
+            )
+        self.push(val)
+
+    def byte_STORE_FAST(self, name):
+        self.frame.f_locals[name] = self.pop()
+
+    def byte_LOAD_GLOBAL(self, name):
+        f = self.frame
+        if name in f.f_globals:
+            val = f.f_globals[name]
+        elif name in f.f_builtins:
+            val = f.f_builtins[name]
+        else:
+            raise NameError(&quot;global name '%s' is not defined&quot; % name)
+        self.push(val)
+
+    ## Operators
+
+    BINARY_OPERATORS = {
+        'POWER':    pow,
+        'MULTIPLY': operator.mul,
+        'FLOOR_DIVIDE': operator.floordiv,
+        'TRUE_DIVIDE':  operator.truediv,
+        'MODULO':   operator.mod,
+        'ADD':      operator.add,
+        'SUBTRACT': operator.sub,
+        'SUBSCR':   operator.getitem,
+        'LSHIFT':   operator.lshift,
+        'RSHIFT':   operator.rshift,
+        'AND':      operator.and_,
+        'XOR':      operator.xor,
+        'OR':       operator.or_,
+    }
+
+    def binaryOperator(self, op):
+        x, y = self.popn(2)
+        self.push(self.BINARY_OPERATORS[op](x, y))
+
+    COMPARE_OPERATORS = [
+        operator.lt,
+        operator.le,
+        operator.eq,
+        operator.ne,
+        operator.gt,
+        operator.ge,
+        lambda x, y: x in y,
+        lambda x, y: x not in y,
+        lambda x, y: x is y,
+        lambda x, y: x is not y,
+        lambda x, y: issubclass(x, Exception) and issubclass(x, y),
+    ]
+
+    def byte_COMPARE_OP(self, opnum):
+        x, y = self.popn(2)
+        self.push(self.COMPARE_OPERATORS[opnum](x, y))
+
+    ## Attributes and indexing
+
+    def byte_LOAD_ATTR(self, attr):
+        obj = self.pop()
+        val = getattr(obj, attr)
+        self.push(val)
+
+    def byte_STORE_ATTR(self, name):
+        val, obj = self.popn(2)
+        setattr(obj, name, val)
+
+    ## Building
+
+    def byte_BUILD_LIST(self, count):
+        elts = self.popn(count)
+        self.push(elts)
+
+    def byte_BUILD_MAP(self, size):
+        self.push({})
+
+    def byte_STORE_MAP(self):
+        the_map, val, key = self.popn(3)
+        the_map[key] = val
+        self.push(the_map)
+
+    def byte_LIST_APPEND(self, count):
+        val = self.pop()
+        the_list = self.frame.stack[-count] # peek
+        the_list.append(val)
+
+    ## Jumps
+
+    def byte_JUMP_FORWARD(self, jump):
+        self.jump(jump)
+
+    def byte_JUMP_ABSOLUTE(self, jump):
+        self.jump(jump)
+
+    def byte_POP_JUMP_IF_TRUE(self, jump):
+        val = self.pop()
+        if val:
+            self.jump(jump)
+
+    def byte_POP_JUMP_IF_FALSE(self, jump):
+        val = self.pop()
+        if not val:
+            self.jump(jump)
+
+    ## Blocks
+
+    def byte_SETUP_LOOP(self, dest):
+        self.push_block('loop', dest)
+
+    def byte_GET_ITER(self):
+        self.push(iter(self.pop()))
+
+    def byte_FOR_ITER(self, jump):
+        iterobj = self.top()
+        try:
+            v = next(iterobj)
+            self.push(v)
+        except StopIteration:
+            self.pop()
+            self.jump(jump)
+
+    def byte_BREAK_LOOP(self):
+        return 'break'
+
+    def byte_POP_BLOCK(self):
+        self.pop_block()
+
+    ## Functions
+
+    def byte_MAKE_FUNCTION(self, argc):
+        name = self.pop()
+        code = self.pop()
+        defaults = self.popn(argc)
+        globs = self.frame.f_globals
+        fn = Function(name, code, globs, defaults, None, self)
+        self.push(fn)
+
+    def byte_CALL_FUNCTION(self, arg):
+        lenKw, lenPos = divmod(arg, 256) # KWargs not supported here
+        posargs = self.popn(lenPos)
+
+        func = self.pop()
+        frame = self.frame
+        retval = func(*posargs)
+        self.push(retval)
+
+    def byte_RETURN_VALUE(self):
+        self.return_value = self.pop()
+        return &quot;return&quot;
+</code></pre>
+
+<h2 id="dynamic-typing-what-the-compiler-doesn-t-know">Dynamic Typing: What the Compiler Doesn&rsquo;t Know</h2>
+
+<p>你可能听过Python是一种动态语言 &mdash; 是它是动态类型的。在我们建造解释器的过程中，已经透露出这样的信息。</p>
+
+<p>动态的一个意思是很多工作在运行时完成。前面我们看到Python的编译器没有很多关于代码真正做什么的信息。举个例子，考虑下面这个简单的函数<code>mod</code>。它取两个参数，返回它们的模运算值。从它的字节码中，我们看到变量<code>a</code>和<code>b</code>首先被加载，然后字节码<code>BINAY_MODULO</code>完成这个模运算。</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; def mod(a, b):
+...    return a % b
+&gt;&gt;&gt; dis.dis(mod)
+  2           0 LOAD_FAST                0 (a)
+              3 LOAD_FAST                1 (b)
+              6 BINARY_MODULO
+              7 RETURN_VALUE
+&gt;&gt;&gt; mod(19, 5)
+4
+</code></pre>
+
+<p>计算19 % 5得4，&mdash; 一点也不奇怪。如果我们用不同类的参数呢？</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; mod(&quot;by%sde&quot;, &quot;teco&quot;)
+'bytecode'
+</code></pre>
+
+<p>刚才发生了什么？你可能见过这样的语法，格式化字符串。</p>
+
+<pre><code>&gt;&gt;&gt; print(&quot;by%sde&quot; % &quot;teco&quot;)
+bytecode
+</code></pre>
+
+<p>用符号<code>%</code>去格式化字符串会调用字节码<code>BUNARY_MODULO</code>.它取栈顶的两个值求模，不管这两个值是字符串，数字或是你自己定义的类的实例。字节码在函数编译时生成（或者说，函数定义时）相同的字节码会用于不同类的参数。</p>
+
+<p>Python的编译器关于字节码的功能知道的很少。而取决于解释器来决定<code>BINAYR_MODULO</code>应用于什么类型的对象并完成正确的操作。这就是为什么Python被描述为_动态类型_：直到运行前你不必知道这个函数参数的类型。相反，在一个静态类型语言中，程序员需要告诉编译器参数的类型是什么（或者编译器自己推断出参数的类型。）</p>
+
+<p>编译器的无知是优化Python的一个挑战 &mdash; 只看字节码，而不真正运行它，你就不知道每条字节码在干什么！你可以定义一个类，实现<code>__mod__</code>方法，当你对这个类的实例使用<code>%</code>时，Python就会自动调用这个方法。所以，<code>BINARY_MODULO</code>其实可以运行任何代码。</p>
+
+<p>看看下面的代码，第一个<code>a % b</code>看起来没有用。</p>
+
+<pre><code class="language-python">def mod(a,b):
+    a % b
+    return a %b
+</code></pre>
+
+<p>不幸的是，对这段代码进行静态分析 &mdash; 不运行它 &mdash; 不能确定第一个<code>a % b</code>没有做任何事。用 <code>%</code>调用<code>__mod__</code>可能会写一个文件，或是和程序的其他部分交互，或者其他任何可以在Python中完成的事。很难优化一个你不知道它会做什么的函数。在Russell Power和Alex Rubinsteyn的优秀论文中写道，“我们可以用多快的速度解释Python？”，他们说，“在普遍缺乏类型信息下，每条指令必须被看作一个<code>INVOKE_ARBITRARY_METHOD</code>。”</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Byterun是一个比CPython容易理解的简洁的Python解释器。Byterun复制了CPython的主要结构：一个基于栈的指令集称为字节码，它们顺序执行或在指令间跳转，向栈中压入和从中弹出数据。解释器随着函数和生成器的调用和返回，动态的创建，销毁frame，并在frame间跳转。Byterun也有着和真正解释器一样的限制：因为Python使用动态类型，解释器必须在运行时决定指令的正确行为。</p>
+
+<p>我鼓励你去反汇编你的程序，然后用Byterun来运行。你很快会发现这个缩短版的Byterun所没有实现的指令。完整的实现在<a href="https://github.com/nedbat/byterun，或者仔细阅读真正的CPython解释器`ceval.c`,你也可以实现自己的解释器！">https://github.com/nedbat/byterun，或者仔细阅读真正的CPython解释器`ceval.c`,你也可以实现自己的解释器！</a></p>
+
+<h2 id="acknowledgements">Acknowledgements</h2>
+
+<p>Thanks to Ned Batchelder for originating this project and guiding my contributions, Michael Arntzenius for his help debugging the code and editing the prose, Leta Montopoli for her edits, and the entire Recurse Center community for their support and interest. Any errors are my own.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:thanks">感谢 Michael Arntzenius 对这个bug的洞悉。
+ <a class="footnote-return" href="#fnref:thanks"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+        </div>
+
+        <aside>
+          <section>
+            <div>
+              <div class="p-share">
+                <a href="http://www.facebook.com/sharer.php?src=bm&u=http%3a%2f%2fqingyunha.github.com%2fhugo%2ftranslation%2fpython-interpreter%2f&t=A%20Python%20Interpreter%20Written%20in%20Python" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"><i class="fa fa-facebook"></i></a>
+                <a href="http://twitter.com/intent/tweet?url=http%3a%2f%2fqingyunha.github.com%2fhugo%2ftranslation%2fpython-interpreter%2f&text=A%20Python%20Interpreter%20Written%20in%20Python&tw_p=tweetbutton" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"><i class="fa fa-twitter"></i></a>
+                <a href="https://plus.google.com/share?url=http%3a%2f%2fqingyunha.github.com%2fhugo%2ftranslation%2fpython-interpreter%2f" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"><i class="fa fa-google-plus"></i></a>
+                <a href="http://getpocket.com/edit?url=http%3a%2f%2fqingyunha.github.com%2fhugo%2ftranslation%2fpython-interpreter%2f&title=A%20Python%20Interpreter%20Written%20in%20Python" onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"><i class="fa fa-get-pocket"></i></a>
+              </div>
+            </div>
+          </section>
+
+          
+          
+          
+        </aside>
+
+      </article>
+
+    </div>
+    <div class="col-md-3">
+      <aside class="site">
+
+  
+  <section>
+    <header>Table Of Contents</header>
+    <div><nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#introduction">Introduction</a>
+<ul>
+<li><a href="#a-python-interpreter">A Python Interpreter</a></li>
+<li><a href="#a-python-python-interpreter">A Python Python Interpreter</a></li>
+</ul></li>
+<li><a href="#building-an-interpreter">Building an Interpreter</a>
+<ul>
+<li><a href="#a-tiny-interpreter">A Tiny Interpreter</a></li>
+<li><a href="#variables">Variables</a></li>
+</ul></li>
+<li><a href="#real-python-bytecode">Real Python Bytecode</a>
+<ul>
+<li><a href="#conditionals-and-loops">Conditionals and Loops</a></li>
+<li><a href="#explore-bytecode">Explore Bytecode</a></li>
+</ul></li>
+<li><a href="#frames">Frames</a></li>
+<li><a href="#byterun">Byterun</a>
+<ul>
+<li><a href="#the-virtualmachine-class">The <code>VirtualMachine</code> Class</a></li>
+<li><a href="#the-frame-class">The <code>Frame</code> Class</a></li>
+<li><a href="#the-function-class">The <code>Function</code> Class</a></li>
+<li><a href="#the-block-class">The <code>Block</code> Class</a></li>
+</ul></li>
+<li><a href="#the-instructions">The Instructions</a></li>
+<li><a href="#dynamic-typing-what-the-compiler-doesn-t-know">Dynamic Typing: What the Compiler Doesn&rsquo;t Know</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#acknowledgements">Acknowledgements</a></li>
+</ul></li>
+</ul>
+</nav></div>
+  </section>
+  
+
+  
+
+  <section>
+    <header>LatestPosts</header>
+    <div>
+      
+      <article class="li">
+  <a href="http://qingyunha.github.com/hugo/wiki/git-proxy/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, Aug 6, 2016</time>
+      </div>
+      <h2 class="title">git proxy</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.com/hugo/post/python-logging/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, Jul 9, 2016</time>
+      </div>
+      <h2 class="title">python logging</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.com/hugo/translation/crawler/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, Jul 9, 2016</time>
+      </div>
+      <h2 class="title">A Web Crawler With asyncio Coroutines</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.com/hugo/translation/python-interpreter/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Mon, May 9, 2016</time>
+      </div>
+      <h2 class="title">A Python Interpreter Written in Python</h2>
+    </footer>
+  </a>
+</article>
+
+      
+    </div>
+  </section>
+
+  
+  <section>
+    <header>category</header>
+    <div>
+      <ul>
+        <li><a href="http://qingyunha.github.com/hugo/categories/translation">translation</a></li><li><a href="http://qingyunha.github.com/hugo/categories/blog">blog</a></li><li><a href="http://qingyunha.github.com/hugo/categories/wiki">wiki</a></li>
+      </ul>
+    </div>
+  </section>
+  
+  <section>
+    <header>tag</header>
+    <div>
+      <ul>
+        <li><a href="http://qingyunha.github.com/hugo/tags/python">python</a></li><li><a href="http://qingyunha.github.com/hugo/tags/asyn">asyn</a></li><li><a href="http://qingyunha.github.com/hugo/tags/git">git</a></li><li><a href="http://qingyunha.github.com/hugo/tags/interpreter">interpreter</a></li><li><a href="http://qingyunha.github.com/hugo/tags/logging">logging</a></li><li><a href="http://qingyunha.github.com/hugo/tags/proxy">proxy</a></li><li><a href="http://qingyunha.github.com/hugo/tags/virtual-machine">virtual-machine</a></li>
+      </ul>
+    </div>
+  </section>
+  
+
+</aside>
+
+    </div>
+  </div>
+</div>
+
+
+<footer class="l-footer">
+  <p>&copy; 2016 My Site</p>
+  <p>Powered by <a href="http://gohugo.io" target="_blank" rel="nofollow">Hugo</a>, Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank" rel="nofollow">robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank" rel="nofollow">Daisuke Tsuji</a></p>
+</footer>
+
+<script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+  </body>
+</html>
+
