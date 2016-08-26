@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.16" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Noticia+Text:400,700|Marcellus+SC'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    <link rel="stylesheet" href="http://qingyunha.github.io/hugo/css/styles.css">
+    <link rel="stylesheet" href="http://qingyunha.github.io/hugo/css/custom.css">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://qingyunha.github.io/hugo/index.xml">
+
+    
+    <title>python值传递 or 引用传递 - Qing Yun</title>
+    <meta property='og:title' content="python值传递 or 引用传递 - Qing Yun">
+    <meta property="og:type" content="article">
+    
+
+    <meta property="og:url" content="http://qingyunha.github.io/hugo/blog/python-name/">
+    
+    
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage":{
+      "@type":"WebPage",
+      "@id":"http:\/\/qingyunha.github.io\/hugo\/"
+    },
+    "headline": "python值传递 or 引用传递 |  ",
+    "image": {
+      "@type": "ImageObject",
+      "url": "",
+      "height": 700,
+      "width": 700
+    },
+    "datePublished": "2016-08-22T22:23:25JST",
+    "dateModified": "2016-08-22T22:23:25JST",
+    "author": {
+      "@type": "Person",
+      "name": "",
+      "image": "http:\/\/qingyunha.github.io\/hugo\/images/logo.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "http:\/\/qingyunha.github.io\/hugo\/images/logo.png",
+        "height": 60,
+        "width": 60
+      }
+    },
+    "description": ""
+  }
+</script>
+</head>
+
+<body>
+
+  <header class="l-header">
+    <div class="p-logo">
+      <a href="http://qingyunha.github.io/hugo/">Qing Yun</a>
+    </div>
+  </header>
+
+
+
+<div class="container">
+
+  <div class="row">
+    <div class="col-md-9">
+
+      <article class="single">
+        <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+        <div class="body">
+          <h1>python值传递 or 引用传递</h1>
+          
+
+<p>当被问到python是值传递还是引用传递的时候，你要回答都不是。</p>
+
+<p>要理解这个问题，首先要知道Python中变量，赋值是怎么一回事，它和C语言有很大不同。
+在C语言中，变量可以想象成一个只能装特定类型值的盒子，<code>int a = 5</code>，把数字5放到<code>a</code>盒子中。<code>int b = a</code>，则把<code>a</code>中的5复制一份放入<code>b</code>盒子中。而在Python中，通常的赋值过程被称作<a href="https://docs.python.org/3/reference/executionmodel.html"><strong>name binding</strong></a>，这还包括类和函数定义，import语句，当然还有函数的形参。Python中一切都是对象，即使是数字5，那么现在<code>a = 5</code>的意思就是为5这个对象绑定了一个名字<code>a</code>。你可以把变量想象成一个标签，它现在贴在5这个对象上。<code>b = a</code>, 就是为5又打了个新标签<code>b</code>。</p>
+
+<p>现在就可以很容易解释下面这两个列子：</p>
+
+<pre><code class="language-python">a = 1
+def fun(a):
+    a = 2
+fun(a)
+print(a)  # 1
+</code></pre>
+
+<pre><code class="language-python">l = []
+def fun(l):
+    l.append(1)
+fun(l)
+print(l)  # [1]
+</code></pre>
+
+<p>有人把这种现象归因于可变对象和不可变对象的区别，而其实这两者并没有可比性，如果把第二个例子改一下：</p>
+
+<pre><code class="language-python">l = []
+def fun(l):
+    l = [1, 2, 3]
+fun(l)
+print(l)  # []
+</code></pre>
+
+<p>列表是可变的啊，为什么最后没有打印<code>[1, 2, 3]</code>？在<code>fun</code>开始执行时形参<code>l</code>和<code>fun</code>外的<code>l</code>（不同的作用域）都贴在<code>[]</code>上，当<code>l = [1, 2, 3]</code>被执行，只是把形参<code>l</code>从<code>[]</code>上撕下贴到了<code>[1, 2, 3]</code>上，而<code>fun</code>外的<code>l</code>却依然贴在<code>[]</code>上。</p>
+
+<p>那么Python的参数传递方式到底该叫什么呢？<code>call-by-object-reference</code>，<code>call-by-assignment</code>？在CPython的实现中，名字也是一个对象，而所有的对象都通过<code>PyObject *</code>来引用，名字和对象的绑定关系就是保存在一个Python的字典结构中。不管是赋值还是参数传递，都只是改变了作用域字典中名字对应的对象的引用。也许<code>call-by-object-reference</code>更好些。</p>
+
+<h2 id="reference">reference</h2>
+
+<p><a href="http://stackoverflow.com/questions/986006/how-do-i-pass-a-variable-by-reference">how-do-i-pass-a-variable-by-reference</a></p>
+
+<p><a href="http://robertheaton.com/2014/02/09/pythons-pass-by-object-reference-as-explained-by-philip-k-dick/">Is Python pass-by-reference or pass-by-value?</a></p>
+
+        </div>
+
+        <aside>
+
+          
+          
+          
+        </aside>
+
+      </article>
+
+    </div>
+    <div class="col-md-3">
+      <aside class="site">
+
+  
+  <section>
+    <header>Table Of Contents</header>
+    <div><nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#reference">reference</a></li>
+</ul></li>
+</ul>
+</nav></div>
+  </section>
+  
+
+  
+
+  <section>
+    <header>LatestPosts</header>
+    <div>
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/blog/python-name/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Mon, Aug 22, 2016</time>
+      </div>
+      <h2 class="title">python值传递 or 引用传递</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/blog/read-memcached-1.2.0/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Thu, Aug 18, 2016</time>
+      </div>
+      <h2 class="title">memcached-1.2.0 源码解读</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/wiki/git-proxy/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, Aug 6, 2016</time>
+      </div>
+      <h2 class="title">git proxy</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/blog/python-logging/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, Jul 9, 2016</time>
+      </div>
+      <h2 class="title">python logging</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/translation/crawler/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, Jul 9, 2016</time>
+      </div>
+      <h2 class="title">A Web Crawler With asyncio Coroutines</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/wiki/flask-dev/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, May 21, 2016</time>
+      </div>
+      <h2 class="title">成为Flask贡献者</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/translation/python-interpreter/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Mon, May 9, 2016</time>
+      </div>
+      <h2 class="title">A Python Interpreter Written in Python</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/translation/a-template-engine/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Fri, Oct 9, 2015</time>
+      </div>
+      <h2 class="title">A Template Engine</h2>
+    </footer>
+  </a>
+</article>
+
+      
+    </div>
+  </section>
+
+  
+  <section>
+    <header>category</header>
+    <div>
+      <ul>
+        <li><a href="http://qingyunha.github.io/hugo/categories/blog">blog</a></li><li><a href="http://qingyunha.github.io/hugo/categories/translation">translation</a></li><li><a href="http://qingyunha.github.io/hugo/categories/wiki">wiki</a></li>
+      </ul>
+    </div>
+  </section>
+  
+  <section>
+    <header>tag</header>
+    <div>
+      <ul>
+        <li><a href="http://qingyunha.github.io/hugo/tags/python">python</a></li><li><a href="http://qingyunha.github.io/hugo/tags/asyn">asyn</a></li><li><a href="http://qingyunha.github.io/hugo/tags/git">git</a></li><li><a href="http://qingyunha.github.io/hugo/tags/interpreter">interpreter</a></li><li><a href="http://qingyunha.github.io/hugo/tags/logging">logging</a></li><li><a href="http://qingyunha.github.io/hugo/tags/memcached">memcached</a></li><li><a href="http://qingyunha.github.io/hugo/tags/proxy">proxy</a></li><li><a href="http://qingyunha.github.io/hugo/tags/template-engine">template-engine</a></li><li><a href="http://qingyunha.github.io/hugo/tags/virtual-machine">virtual-machine</a></li>
+      </ul>
+    </div>
+  </section>
+  
+
+</aside>
+
+    </div>
+  </div>
+</div>
+
+
+<footer class="l-footer">
+  <p>&copy; 2016 Qing Yun</p>
+  <p>Powered by <a href="http://gohugo.io" target="_blank" rel="nofollow">Hugo</a>, Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank" rel="nofollow">robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank" rel="nofollow">Daisuke Tsuji</a></p>
+</footer>
+
+<script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+  </body>
+</html>
+

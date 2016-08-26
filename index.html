@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -10,17 +9,17 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
-    <link rel="stylesheet" href="http://qingyunha.github.com/hugo/css/styles.css">
-    <link rel="stylesheet" href="http://qingyunha.github.com/hugo/css/custom.css">
-    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://qingyunha.github.com/hugo/index.xml">
+    <link rel="stylesheet" href="http://qingyunha.github.io/hugo/css/styles.css">
+    <link rel="stylesheet" href="http://qingyunha.github.io/hugo/css/custom.css">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://qingyunha.github.io/hugo/index.xml">
 
     
-    <title>My Site</title>
-    <meta property='og:title' content="My Site">
+    <title>Qing Yun</title>
+    <meta property='og:title' content="Qing Yun">
     <meta property="og:type" content="website">
     
 
-    <meta property="og:url" content="http://qingyunha.github.com/hugo/">
+    <meta property="og:url" content="http://qingyunha.github.io/hugo/">
     
     
 
@@ -31,7 +30,7 @@
 
   <header class="l-header">
     <div class="p-logo">
-      <a href="http://qingyunha.github.com/hugo/">My Site</a>
+      <a href="http://qingyunha.github.io/hugo/">Qing Yun</a>
     </div>
   </header>
 
@@ -41,49 +40,78 @@
   <div class="row">
     <div class="col-md-9">
 
+      <h1 class="p-page-title">Qing Yun</h1>
+
       <div class="row">
         
-        
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <article class="grid">
-  <a href="http://qingyunha.github.com/hugo/wiki/git-proxy/">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/blog/python-name/">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Mon, Aug 22, 2016</time>
+      </div>
+      <h2 class="title">python值传递 or 引用传递</h2>
+      <div class="summary">当被问到python是值传递还是引用传递的时候，你要回答都不是。 要理解这个问题，首先要知道Python中变量，赋值是怎么一回事，它和C语言有很大不同。 在C语言中，变量可以想象成一个只能装特定类型值的盒子，int a = 5，把数字5放到a盒子中。int b = a，则把a中的5复制一份放入b盒子中。而在Python中，通常的赋值过程被称作name binding，这还包括类和函数定义，import语句，当然还有函数的形参。Python中一切都是对象，即使是数字5，那么现在a = 5的意思就是为5这个对象绑定了一个名字a。你可以把变量想象成一个标签，它现在贴在5这个对象上。b = a, 就是为5又打了个新标签b。 现在就可以很容易解释下面这两个列子： a = 1 def fun(a): a = 2 fun(a) print(a) # 1 l = [] def fun(l): l.append(1) fun(l) print(l) # [1] 有人把这种现象归因于可变对象和不可变对象的区别，而其实这两者并没有可比性，如果把第二个例子改一下： l = [] def fun(l): l = [1, 2, 3] fun(l) print(l) # [] 列表是可变的啊，为什么最后没有打印[1, 2, 3]？在fun开始执行时形参l和fun外的l（不同的作用域）都贴在[]上，当l = [1, 2, 3]被执行，只是把形参l从[]上撕下贴到了[1, 2, 3]上，而fun外的l却依然贴在[]上。 那么Python的参数传递方式到底该叫什么呢？call-by-object-reference，call-by-assignment？在CPython的实现中，名字也是一个对象，而所有的对象都通过PyObject *来引用，名字和对象的绑定关系就是保存在一个Python的字典结构中。不管是赋值还是参数传递，都只是改变了作用域字典中名字对应的对象的引用。也许call-by-object-reference更好些。 reference how-do-i-pass-a-variable-by-reference Is Python pass-by-reference or pass-by-value?</div>
+    </footer>
+  </a>
+</article>
+
+        </div>
+        
+        <div class="col-sm-4">
+          <article class="grid">
+  <a href="http://qingyunha.github.io/hugo/blog/read-memcached-1.2.0/">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Thu, Aug 18, 2016</time>
+      </div>
+      <h2 class="title">memcached-1.2.0 源码解读</h2>
+      <div class="summary">关键词 ： libevent，状态机，内存分配，hash表 memcached是一个免费开源的高性能分布式(由客户端提供)对象缓存系统。这篇将对memcached 1.2.0的源码的进行一点解读，这是我能找到的最早的发行版。协议定义在doc/protocol.txt下，代码量在3500行左右： $ wc *.[ch] 186 844 5912 assoc.c 71 328 1963 config.h 70 370 2649 daemon.c 322 1056 8560 items.c 2282 7820 68519 memcached.c 278 1379 9781 memcached.h 356 1392 10717 slabs.c 3565 13189 108101 total 编译需要安装libevent依赖和autotools工具。 libevent libevent提供了一种当文件描述符的事件(读，写)发生时执行回调函数的机制，也支持信号和超时回调。memcached用的是libevent的1.x版本，使用了这样几个API： struct event_base *event_init(void) void event_set(struct event *, int, short, void(*)(int, short, void *), void *) int event_add(struct event *ev, const struct timeval *timeout) int event_del(struct event *)</div>
+    </footer>
+  </a>
+</article>
+
+        </div>
+        
+        <div class="col-sm-4">
+          <article class="grid">
+  <a href="http://qingyunha.github.io/hugo/wiki/git-proxy/">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Aug 6, 2016</time>
       </div>
       <h2 class="title">git proxy</h2>
-      <div class="summary">Git支持多种传输协议，ssh、git、HTTP(S)，甚至ftp，rsync。 当使用不同传输方式时，设置代理的方式也不同。 SSH 当使用SSH协议时，git实际上直接使用ssh命令，所以我们只要给ssh设置好代理就可以了。在~/.ssh/config中： Host github.com User git ProxyCommand nc -x localhost:1080 %h %p 参见ssh_config(5)manual HTTP(S) git使用libcurl来处理HTTP和HTTPS，可以通过设置git的http.proxy选项： git config --global http.proxy socks5://localhost:1080 参见curl(1)的&ndash;proxy选项和git-config(1)中的http.proxy Git 当使用git传输协议时，你可以设置git的gitproxy选项： git config --global core.gitproxy git-proxy 这里的git-proxy是任何一个可执行文件，同时它要能接受2个参数，host、port（git服务器的地址和端口）。git-proxy完成代理工作。 例如这样一个shell脚本： #!/usr/bin/env bash nc -x localhost:1080 $1 $2 参见git_config(1) 如何判断git使用何种协议 根据git服务器的url就可以看出： ssh://[user@]host.xz[:port]/path/to/repo.git/ git://host.xz[:port]/path/to/repo.git/ http[s]://host.xz[:port]/path/to/repo.git/ ftp[s]://host.xz[:port]/path/to/repo.git/ rsync://host.xz/path/to/repo.git/ 对于SSH协议，还有一种类似scp的语法： [user@]host.xz:path/to/repo.git/ 参见git-fetch(1)的GIT URLS nc命令 nc(netcat)可以用 -X 指定代理方式：socks4、 sockes5、 HTTPS CONNECT，默认为socks5。 -x 指定代理地址。 参见nc(1) reference Tutorial: how to use git through a proxy</div>
+      <div class="summary">Git支持多种传输协议，ssh、git、HTTP(S)，甚至ftp，rsync。 当使用不同传输方式时，设置代理的方式也不同。 SSH 当使用SSH协议时，git实际上直接使用ssh命令，所以我们只要给ssh设置好代理就可以了。在~/.ssh/config中： Host github.com User git ProxyCommand nc -x localhost:1080 %h %p 参见ssh_config(5)manual HTTP(S) git使用libcurl来处理HTTP和HTTPS，可以通过设置git的http.proxy选项： git config --global http.proxy socks5://localhost:1080 也可以直接设置curl支持的环境变量，比如ALL_PROXY=socks5://localhost:1080 参见curl(1)的&ndash;proxy选项和git-config(1)中的http.proxy Git 当使用git传输协议时，你可以设置git的gitproxy选项： git config --global core.gitproxy git-proxy 这里的git-proxy是任何一个可执行文件，同时它要能接受2个参数，host、port（git服务器的地址和端口）。git-proxy完成代理工作。 例如这样一个shell脚本： #!/usr/bin/env bash nc -x localhost:1080 $1 $2 也可以直接设置环境变量GIT_PROXY_COMMAND=git-porxy 参见git_config(1) 如何判断git使用何种协议 根据git服务器的url就可以看出： ssh://[user@]host.xz[:port]/path/to/repo.git/ git://host.xz[:port]/path/to/repo.git/ http[s]://host.xz[:port]/path/to/repo.git/ ftp[s]://host.xz[:port]/path/to/repo.git/ rsync://host.xz/path/to/repo.git/ 对于SSH协议，还有一种类似scp的语法： [user@]host.xz:path/to/repo.git/ 参见git-fetch(1)的GIT URLS nc命令 nc(netcat)可以用 -X 指定代理方式：socks4、 sockes5、 HTTPS CONNECT，默认为socks5。 -x 指定代理地址。 参见nc(1) example golang的go get命令会用到git，你可以这样： env ALL_PROXY=socks5://localhost:1080 GIT_PROXY_COMMAND=git-porxy go get -v ./...</div>
     </footer>
   </a>
 </article>
 
         </div>
         
-        
-        
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <article class="grid">
-  <a href="http://qingyunha.github.com/hugo/post/python-logging/">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/blog/python-logging/">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Jul 9, 2016</time>
       </div>
       <h2 class="title">python logging</h2>
-      <div class="summary">日志对程序的调试和问题的发现很有帮助。如何设置合适的日志需要需要一些考虑。 以python标准库logging为例。 logging分有多种级别: DEBUG INFO WARNING ERROR CRITICAL 一个应用中可以有多个logger对象，比如每个module一个logger。 不同logger对象可以设置不同的级别，只有大于该级别的log事件才会被记录。</div>
+      <div class="summary">日志对程序的调试和问题的发现很有帮助。如何设置合适的日志需要需要一些考虑。 以python2.7标准库logging为例。 logging分有多种级别: NOTSET DEBUG INFO WARNING ERROR CRITICAL 一个应用中可以有多个logger对象，比如每个module一个logger。 不同logger对象可以设置不同的级别，只有大于该级别的log事件才会被记录。 log的记录和处理是分开的，你可以把log简单的打印出来，写到文件中，甚至遇到高级别log事件时，直接给你发邮件。这是由logging.Handler对象来处理，你可以为一个logger添加多个handler，同时handler也是分级别的，这样你就可以对不同级别的log做出不同的处理了。 每个Logger都有一个唯一的名字，通常用logging.getLogger(__name__)，这样得到的logger的名字就是当前模块的名字,这样还有一个好处，logger是分层的，比如inputlogger就是input.cvs，input.xlslogger的上层。这与python的模块命名空间一致，以.做分割。 这里的分层还意味着log事件会向上层传递，当然你也可以阻止这个行为，通过设置Logger.propagate为False。 logger，handler，formmater(log的格式)的创建，配置可以直接写在代码中，比如： import logging # create logger logger = logging.getLogger('simple_example') logger.setLevel(logging.DEBUG) # create console handler and set level to debug ch = logging.StreamHandler() ch.setLevel(logging.DEBUG) # create formatter formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s') # add formatter to ch ch.setFormatter(formatter) # add ch to logger logger.addHandler(ch) # 'application' code logger.debug('debug message') logging模块也提供了从配置文件设置的方法，使用函数fileConfig()： import logging import</div>
     </footer>
   </a>
 </article>
 
         </div>
         
-        
-        
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <article class="grid">
-  <a href="http://qingyunha.github.com/hugo/translation/crawler/">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/translation/crawler/">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Jul 9, 2016</time>
@@ -96,12 +124,26 @@
 
         </div>
         
-        
-        
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <article class="grid">
-  <a href="http://qingyunha.github.com/hugo/translation/python-interpreter/">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/wiki/flask-dev/">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, May 21, 2016</time>
+      </div>
+      <h2 class="title">成为Flask贡献者</h2>
+      <div class="summary">当你clone下Flask项目之后： 使用virtualenv或者venv创建虚拟环境 pip install -e .用开发者模式安装本地Flask py.test tests运行测试代码 (如果不用上面的方法，py.test很难用起来) 在github fork后git add remote fork https://github.com/&lt;username&gt;/flask.git</div>
+    </footer>
+  </a>
+</article>
+
+        </div>
+        
+        <div class="col-sm-4">
+          <article class="grid">
+  <a href="http://qingyunha.github.io/hugo/translation/python-interpreter/">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Mon, May 9, 2016</time>
@@ -114,6 +156,21 @@
 
         </div>
         
+        <div class="col-sm-4">
+          <article class="grid">
+  <a href="http://qingyunha.github.io/hugo/translation/a-template-engine/">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Fri, Oct 9, 2015</time>
+      </div>
+      <h2 class="title">A Template Engine</h2>
+      <div class="summary">Introduction 大多数程序包含大量的逻辑和点点文本数据，编程语言被设计成适合做这样的 事情。但是有些编程任务只需要点点逻辑和大量的文本数据，对于这样的任务， 我们希望有一个更合适工具来做。模板引擎就是这样一个工具。在这一章，我 们会开发一个简单的模板引擎。 一个最常见的需要处理多文本数据的例子是web应用。web应用的一个重要部分 是为浏览器生成HTML网页。很少网页是完全静态的，它们至少包含一些动态数 据，比如用户名。一般情况下，网页有很大一部分动态数据：产品列表，好友消息更 新等等。 同时，每个HTML网页包含大量的静态文本。并且这些网页很大，有成千上万个 字节。这时，web开发者就有一个问题要解决：怎样才能最有效的生成同时包 含静态和动态数据的长字符串？随之而来的问题，这些静态文本其实是前端工 程师写的HTML，他们想希望用自己熟悉的方法处理这些HTML。 为了说明，让我们假设想生成这样一个简单的HTML &lt;p&gt;Welcome, Charlie!&lt;/p&gt; &lt;p&gt;Products:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;Apple: $1.00&lt;/li&gt; &lt;li&gt;Fig: $1.50&lt;/li&gt; &lt;li&gt;Pomegranate: $3.25&lt;/li&gt; &lt;/ul&gt; 这里，用户名会是动态的，产品的名称和数量也是动态的，甚至产品的数量也 不是固定的：在其他情况，可能有更多或更少的产品。 一个简单的方法生成这样的网页是把这样的字符串作为常量写入我们的代码中， 然后把它们拼在一起完成这个网页。动态数据使用类似字符替换的方法插入进 去。有些动态数据是重复的，比如产品列表，这就是说我们会有一些重复的 HTML段，所以我们要单独的去处理它们再和其他的HTML合并起来。 使用这种方法生成我们的HTML的代码会像这样 # The main HTML for the whole page. PAGE_HTML = &quot;&quot;&quot; &lt;p&gt;Welcome, {name}!&lt;/p&gt; &lt;p&gt;Products:&lt;/p&gt; &lt;ul&gt; {products} &lt;/ul&gt; &quot;&quot;&quot; # The HTML for each product displayed. PRODUCT_HTML = &quot;&lt;li&gt;{prodname}: {price}&lt;/li&gt;\n&quot; def make_page(username, products): product_html = &quot;&quot; for prodname, price in products: product_html += PRODUCT_HTML.format(prodname=prodname, price=format_price(price)) html = PAGE_HTML.format(name=username, products=product_html) return html 这样可以，但是我们搞得乱七八糟，HTML成了我们代码里的字符串常量，我们 很难看出这个HTML的结构，因为它被分成一段一段的了。数据格式的细节迷失 在python代码中。并且，为了修改HTML，我们的前端工程师需要修改python代 码。想象一下，如果这个网页比现在这个复杂10倍（或者100倍）我们代码会 是什么样子。 Templates 更好的方法是用模板来生成HTML，或者说把HTML写成一个模板，这样绝大部分 就是静态HTML，再加上一点使用特别符号的动态内容。现在我们的toy网页就成了 下面这样的模板 &lt;p&gt;Welcome, {{user_name}}!&lt;/p&gt; &lt;p&gt;Products:&lt;/p&gt; &lt;ul&gt; {% for product in product_list %} &lt;li&gt;{{ product.name }}: {{ product.price|format_price }}&lt;/li&gt; {% endfor %} &lt;/ul&gt; 这里我们关注的是HTML文本，另外加上一点逻辑。对比现在以文本为中心的方 法和之前以逻辑为中心的方法，我们之前的程序大部分是python代码，这里我 的程序大部分是静态的HTML标签。 在模板中采用的以静态为主的风格和大多数编程语言的工作方式相反。比如 python，几乎所有的源文件都是可执行代码，如果你需要静态文本，你就要把 它嵌到字符串中。 def hello(): print(&quot;Hello world!&quot;) hello() 当python读取这个源文件时，它把def hello():这样的文本解释成要被执行 的指令，而在双引号中的字符 print(&quot;Hello, world!&quot;)被指示成文本。这 就是编程语言如何工作的：动态的，嵌入点点静态内容。静态的内容通过双引号来指示。 一个模板语言把这个过程反过来了，大部分是静态文本，用特殊的符号指示动态 内容。 &lt;p&gt;Welcome, {{user_name}}!&lt;/p&gt; 这里的文本会直接出现在最终的HTML中，直到遇到 {{ 符号，它指示转换到 动态模式，这里user_name变量就会被替换。 字符串格式化函数，比如python的 &quot;foo = {foo}!&quot;.format(foo=17)就是一 个在字符串并插入数据创建文本的微型语言的例子。模板更进一步，加上逻辑结构，比如条件，循环。这只是在程度上不同。 把这些文件叫做模板是因为它们被用来生成大量结构相似的网页，只是细节不同。 为了在程序中使用HTML模板，我们需要一个模板引擎(template engine)：一个需要两个参数的函数，一个是描述页面结构和内容的静态模板，另一个是包含要插入到模板中的动态数据的上下文。模板引擎把模板和上下文结合起来生成完整的HTML字符串，它的任务是解释模板，用真正的数据替换动态的部分。 顺便说一下，HTML对模板引擎并没有什么特别的地方，它可以用来生成任何文本数据。比如，它可以被用来生成纯文本的email信息。但是它通常用于HTML，或许碰巧还有些专门对HTML的特性，比如转义，这个特性让你不用担心插入了对HTML有特殊含义的字符。 Supported Syntax 不同的模板引擎在语法支持上各有不同。我们的模板语法基于Django，一个非常流行的网站框架。因为我们的引擎使用python实现的，一些python的概念会出现在我们的语法中。在上一节的HTML中我们已经看到了一些语法，这里是我们语法的小总结。 上下文中的数据插入到两个大括号中 &lt;p&gt;Welcome, {{user_name}}!&lt;/p&gt; 在模板中可用的数据在上下文中，后面我们详细的讲到。 我们的模板引擎提供了一个简单自由的语法访问数据中的元素。在python中，这些表达式有不同的效果： dict[&quot;key&quot;] obj.attr obj.method() 在我们的语法中，所有这些操作都用点号表示。 dict.key obj.attr obj.method 这个点号会访问对象的属性，字典里的值，如果结果是可调用的，那么就自动调用它。这与python代码不同，你需要不同的语法完成不同的操作。在我们简单的语法下会是这样： &lt;p&gt;The price is: {{product.price}}, with a {{product.discount}}% discount.&lt;/p&gt; 点号可以在一个值上多次使用以访问元素链。 你还可以使用帮助函数，把它们叫做过滤器，用管道符号调用 &lt;p&gt;Short name: {{story.subject|slugify|lower}}&lt;/p&gt; 制作有趣的网页通常需要一点逻辑，所以我们有条件表达式： {% if user.is_logged_in %} &lt;p&gt;Welcome, {{ user.name }}!&lt;/p&gt; {% else %} &lt;p&gt;&lt;a href=&quot;/login&quot;&gt;Log in &lt;/a&gt;&lt;/p&gt; {% endif %} 循环可以让我们在网页里包含数据集合： &lt;p&gt;Products:&lt;/p&gt; &lt;ul&gt; {% for product in product_list %} &lt;li&gt;{{ product.name }}: {{ product.price|format_price }}&lt;/li&gt; {% endfor %} &lt;/ul&gt; 和其他的编程语言一样，条件和循环可以嵌套使用。 最后，我们可以对模板注释 {# This is the best template ever!</div>
+    </footer>
+  </a>
+</article>
+
+        </div>
         
       </div>
 
@@ -134,8 +191,34 @@
     <div>
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/wiki/git-proxy/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/blog/python-name/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Mon, Aug 22, 2016</time>
+      </div>
+      <h2 class="title">python值传递 or 引用传递</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/blog/read-memcached-1.2.0/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Thu, Aug 18, 2016</time>
+      </div>
+      <h2 class="title">memcached-1.2.0 源码解读</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/wiki/git-proxy/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Aug 6, 2016</time>
@@ -147,8 +230,8 @@
 
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/post/python-logging/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/blog/python-logging/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Jul 9, 2016</time>
@@ -160,8 +243,8 @@
 
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/translation/crawler/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/translation/crawler/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Jul 9, 2016</time>
@@ -173,13 +256,39 @@
 
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/translation/python-interpreter/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/wiki/flask-dev/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, May 21, 2016</time>
+      </div>
+      <h2 class="title">成为Flask贡献者</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/translation/python-interpreter/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Mon, May 9, 2016</time>
       </div>
       <h2 class="title">A Python Interpreter Written in Python</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/translation/a-template-engine/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Fri, Oct 9, 2015</time>
+      </div>
+      <h2 class="title">A Template Engine</h2>
     </footer>
   </a>
 </article>
@@ -193,7 +302,7 @@
     <header>category</header>
     <div>
       <ul>
-        <li><a href="http://qingyunha.github.com/hugo/categories/translation">translation</a></li><li><a href="http://qingyunha.github.com/hugo/categories/blog">blog</a></li><li><a href="http://qingyunha.github.com/hugo/categories/wiki">wiki</a></li>
+        <li><a href="http://qingyunha.github.io/hugo/categories/blog">blog</a></li><li><a href="http://qingyunha.github.io/hugo/categories/translation">translation</a></li><li><a href="http://qingyunha.github.io/hugo/categories/wiki">wiki</a></li>
       </ul>
     </div>
   </section>
@@ -202,7 +311,7 @@
     <header>tag</header>
     <div>
       <ul>
-        <li><a href="http://qingyunha.github.com/hugo/tags/python">python</a></li><li><a href="http://qingyunha.github.com/hugo/tags/asyn">asyn</a></li><li><a href="http://qingyunha.github.com/hugo/tags/git">git</a></li><li><a href="http://qingyunha.github.com/hugo/tags/interpreter">interpreter</a></li><li><a href="http://qingyunha.github.com/hugo/tags/logging">logging</a></li><li><a href="http://qingyunha.github.com/hugo/tags/proxy">proxy</a></li><li><a href="http://qingyunha.github.com/hugo/tags/virtual-machine">virtual-machine</a></li>
+        <li><a href="http://qingyunha.github.io/hugo/tags/python">python</a></li><li><a href="http://qingyunha.github.io/hugo/tags/asyn">asyn</a></li><li><a href="http://qingyunha.github.io/hugo/tags/git">git</a></li><li><a href="http://qingyunha.github.io/hugo/tags/interpreter">interpreter</a></li><li><a href="http://qingyunha.github.io/hugo/tags/logging">logging</a></li><li><a href="http://qingyunha.github.io/hugo/tags/memcached">memcached</a></li><li><a href="http://qingyunha.github.io/hugo/tags/proxy">proxy</a></li><li><a href="http://qingyunha.github.io/hugo/tags/template-engine">template-engine</a></li><li><a href="http://qingyunha.github.io/hugo/tags/virtual-machine">virtual-machine</a></li>
       </ul>
     </div>
   </section>
@@ -218,7 +327,7 @@
 
 
 <footer class="l-footer">
-  <p>&copy; 2016 My Site</p>
+  <p>&copy; 2016 Qing Yun</p>
   <p>Powered by <a href="http://gohugo.io" target="_blank" rel="nofollow">Hugo</a>, Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank" rel="nofollow">robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank" rel="nofollow">Daisuke Tsuji</a></p>
 </footer>
 
@@ -231,4 +340,5 @@
 
   </body>
 </html>
+
 

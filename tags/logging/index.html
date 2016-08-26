@@ -9,17 +9,17 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
-    <link rel="stylesheet" href="http://qingyunha.github.com/hugo/css/styles.css">
-    <link rel="stylesheet" href="http://qingyunha.github.com/hugo/css/custom.css">
-    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://qingyunha.github.com/hugo/index.xml">
+    <link rel="stylesheet" href="http://qingyunha.github.io/hugo/css/styles.css">
+    <link rel="stylesheet" href="http://qingyunha.github.io/hugo/css/custom.css">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://qingyunha.github.io/hugo/index.xml">
 
     
-    <title>Logging - My Site</title>
-    <meta property='og:title' content="Logging - My Site">
+    <title>Logging - Qing Yun</title>
+    <meta property='og:title' content="Logging - Qing Yun">
     <meta property="og:type" content="article">
     
 
-    <meta property="og:url" content="http://qingyunha.github.com/hugo/tags/logging/">
+    <meta property="og:url" content="http://qingyunha.github.io/hugo/tags/logging/">
     
     
 
@@ -30,7 +30,7 @@
 
   <header class="l-header">
     <div class="p-logo">
-      <a href="http://qingyunha.github.com/hugo/">My Site</a>
+      <a href="http://qingyunha.github.io/hugo/">Qing Yun</a>
     </div>
   </header>
 
@@ -46,14 +46,14 @@
         
         <div class="col-sm-4">
           <article class="grid">
-  <a href="http://qingyunha.github.com/hugo/post/python-logging/">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/blog/python-logging/">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Jul 9, 2016</time>
       </div>
       <h2 class="title">python logging</h2>
-      <div class="summary">日志对程序的调试和问题的发现很有帮助。如何设置合适的日志需要需要一些考虑。 以python标准库logging为例。 logging分有多种级别: DEBUG INFO WARNING ERROR CRITICAL 一个应用中可以有多个logger对象，比如每个module一个logger。 不同logger对象可以设置不同的级别，只有大于该级别的log事件才会被记录。</div>
+      <div class="summary">日志对程序的调试和问题的发现很有帮助。如何设置合适的日志需要需要一些考虑。 以python2.7标准库logging为例。 logging分有多种级别: NOTSET DEBUG INFO WARNING ERROR CRITICAL 一个应用中可以有多个logger对象，比如每个module一个logger。 不同logger对象可以设置不同的级别，只有大于该级别的log事件才会被记录。 log的记录和处理是分开的，你可以把log简单的打印出来，写到文件中，甚至遇到高级别log事件时，直接给你发邮件。这是由logging.Handler对象来处理，你可以为一个logger添加多个handler，同时handler也是分级别的，这样你就可以对不同级别的log做出不同的处理了。 每个Logger都有一个唯一的名字，通常用logging.getLogger(__name__)，这样得到的logger的名字就是当前模块的名字,这样还有一个好处，logger是分层的，比如inputlogger就是input.cvs，input.xlslogger的上层。这与python的模块命名空间一致，以.做分割。 这里的分层还意味着log事件会向上层传递，当然你也可以阻止这个行为，通过设置Logger.propagate为False。 logger，handler，formmater(log的格式)的创建，配置可以直接写在代码中，比如： import logging # create logger logger = logging.getLogger('simple_example') logger.setLevel(logging.DEBUG) # create console handler and set level to debug ch = logging.StreamHandler() ch.setLevel(logging.DEBUG) # create formatter formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s') # add formatter to ch ch.setFormatter(formatter) # add ch to logger logger.addHandler(ch) # 'application' code logger.debug('debug message') logging模块也提供了从配置文件设置的方法，使用函数fileConfig()： import logging import</div>
     </footer>
   </a>
 </article>
@@ -79,8 +79,34 @@
     <div>
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/wiki/git-proxy/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/blog/python-name/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Mon, Aug 22, 2016</time>
+      </div>
+      <h2 class="title">python值传递 or 引用传递</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/blog/read-memcached-1.2.0/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Thu, Aug 18, 2016</time>
+      </div>
+      <h2 class="title">memcached-1.2.0 源码解读</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/wiki/git-proxy/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Aug 6, 2016</time>
@@ -92,8 +118,8 @@
 
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/post/python-logging/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/blog/python-logging/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Jul 9, 2016</time>
@@ -105,8 +131,8 @@
 
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/translation/crawler/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/translation/crawler/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Jul 9, 2016</time>
@@ -118,13 +144,39 @@
 
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/translation/python-interpreter/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/wiki/flask-dev/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, May 21, 2016</time>
+      </div>
+      <h2 class="title">成为Flask贡献者</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/translation/python-interpreter/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Mon, May 9, 2016</time>
       </div>
       <h2 class="title">A Python Interpreter Written in Python</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/translation/a-template-engine/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Fri, Oct 9, 2015</time>
+      </div>
+      <h2 class="title">A Template Engine</h2>
     </footer>
   </a>
 </article>
@@ -138,7 +190,7 @@
     <header>category</header>
     <div>
       <ul>
-        <li><a href="http://qingyunha.github.com/hugo/categories/translation">translation</a></li><li><a href="http://qingyunha.github.com/hugo/categories/blog">blog</a></li><li><a href="http://qingyunha.github.com/hugo/categories/wiki">wiki</a></li>
+        <li><a href="http://qingyunha.github.io/hugo/categories/blog">blog</a></li><li><a href="http://qingyunha.github.io/hugo/categories/translation">translation</a></li><li><a href="http://qingyunha.github.io/hugo/categories/wiki">wiki</a></li>
       </ul>
     </div>
   </section>
@@ -147,7 +199,7 @@
     <header>tag</header>
     <div>
       <ul>
-        <li><a href="http://qingyunha.github.com/hugo/tags/python">python</a></li><li><a href="http://qingyunha.github.com/hugo/tags/asyn">asyn</a></li><li><a href="http://qingyunha.github.com/hugo/tags/git">git</a></li><li><a href="http://qingyunha.github.com/hugo/tags/interpreter">interpreter</a></li><li><a href="http://qingyunha.github.com/hugo/tags/logging">logging</a></li><li><a href="http://qingyunha.github.com/hugo/tags/proxy">proxy</a></li><li><a href="http://qingyunha.github.com/hugo/tags/virtual-machine">virtual-machine</a></li>
+        <li><a href="http://qingyunha.github.io/hugo/tags/python">python</a></li><li><a href="http://qingyunha.github.io/hugo/tags/asyn">asyn</a></li><li><a href="http://qingyunha.github.io/hugo/tags/git">git</a></li><li><a href="http://qingyunha.github.io/hugo/tags/interpreter">interpreter</a></li><li><a href="http://qingyunha.github.io/hugo/tags/logging">logging</a></li><li><a href="http://qingyunha.github.io/hugo/tags/memcached">memcached</a></li><li><a href="http://qingyunha.github.io/hugo/tags/proxy">proxy</a></li><li><a href="http://qingyunha.github.io/hugo/tags/template-engine">template-engine</a></li><li><a href="http://qingyunha.github.io/hugo/tags/virtual-machine">virtual-machine</a></li>
       </ul>
     </div>
   </section>
@@ -163,7 +215,7 @@
 
 
 <footer class="l-footer">
-  <p>&copy; 2016 My Site</p>
+  <p>&copy; 2016 Qing Yun</p>
   <p>Powered by <a href="http://gohugo.io" target="_blank" rel="nofollow">Hugo</a>, Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank" rel="nofollow">robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank" rel="nofollow">Daisuke Tsuji</a></p>
 </footer>
 

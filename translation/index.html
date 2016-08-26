@@ -9,17 +9,17 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
-    <link rel="stylesheet" href="http://qingyunha.github.com/hugo/css/styles.css">
-    <link rel="stylesheet" href="http://qingyunha.github.com/hugo/css/custom.css">
-    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://qingyunha.github.com/hugo/index.xml">
+    <link rel="stylesheet" href="http://qingyunha.github.io/hugo/css/styles.css">
+    <link rel="stylesheet" href="http://qingyunha.github.io/hugo/css/custom.css">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://qingyunha.github.io/hugo/index.xml">
 
     
-    <title>Translations - My Site</title>
-    <meta property='og:title' content="Translations - My Site">
+    <title>Translations - Qing Yun</title>
+    <meta property='og:title' content="Translations - Qing Yun">
     <meta property="og:type" content="article">
     
 
-    <meta property="og:url" content="http://qingyunha.github.com/hugo/translation/">
+    <meta property="og:url" content="http://qingyunha.github.io/hugo/translation/">
     
     
 
@@ -30,7 +30,7 @@
 
   <header class="l-header">
     <div class="p-logo">
-      <a href="http://qingyunha.github.com/hugo/">My Site</a>
+      <a href="http://qingyunha.github.io/hugo/">Qing Yun</a>
     </div>
   </header>
 
@@ -46,8 +46,8 @@
         
         <div class="col-sm-4">
           <article class="grid">
-  <a href="http://qingyunha.github.com/hugo/translation/crawler/">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/translation/crawler/">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Jul 9, 2016</time>
@@ -62,14 +62,30 @@
         
         <div class="col-sm-4">
           <article class="grid">
-  <a href="http://qingyunha.github.com/hugo/translation/python-interpreter/">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/translation/python-interpreter/">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Mon, May 9, 2016</time>
       </div>
       <h2 class="title">A Python Interpreter Written in Python</h2>
       <div class="summary">Allison是Dropbox的工程师，在那里她维护着世界上最大的由Python客户组成的网络。在Dropbox之前，她是Recurse Center的导师, 曾在纽约写作。在北美的PyCon做过关于Python内部机制的演讲，并且她喜欢奇怪的bugs。她的博客地址是akaptur.com. Introduction Byterun是一个用Python实现的Python解释器。随着我在Byterun上的工作，我惊讶并很高兴地的发现，这个Python解释器的基础结构可以满足500行的限制。在这一章我们会搞清楚这个解释器的结构，给你足够的知识探索下去。我们的目标不是向你展示解释器的每个细节&mdash;像编程和计算机科学其他有趣的领域一样，你可能会投入几年的时间去搞清楚这个主题。 Byterun是Ned Batchelder和我完成的，建立在Paul Swartz的工作之上。它的结构和主要的Python实现（CPython）差不多，所以理解Byterun会帮助你理解大多数解释器特别是CPython解释器。（如果你不知道你用的是什么Python，那么很可能它就是CPython）。尽管Byterun很小，但它能执行大多数简单的Python程序。 A Python Interpreter 在开始之前，让我们缩小一下“Pyhton解释器”的意思。在讨论Python的时候，“解释器”这个词可以用在很多不同的地方。有的时候解释器指的是REPL，当你在命令行下敲下python时所得到的交互式环境。有时候人们会相互替代的使用Python解释器和Python来说明执行Python代码的这一过程。在本章，“解释器”有一个更精确的意思：执行Python程序过程中的最后一步。 在解释器接手之前，Python会执行其他3个步骤：词法分析，语法解析和编译。这三步合起来把源代码转换成code object,它包含着解释器可以理解的指令。而解释器的工作就是解释code object中的指令。 你可能很奇怪执行Python代码会有编译这一步。Python通常被称为解释型语言，就像Ruby，Perl一样，它们和编译型语言相对，比如C，Rust。然而，这里的术语并不是它看起来的那样精确。大多数解释型语言包括Python，确实会有编译这一步。而Python被称为解释型的原因是相对于编译型语言，它在编译这一步的工作相对较少（解释器做相对多的工作）。在这章后面你会看到，Python的编译器比C语言编译器需要更少的关于程序行为的信息。 A Python Python Interpreter Byterun是一个用Python写的Python解释器，这点可能让你感到奇怪，但没有比用C语言写C语言编译器更奇怪。（事实上，广泛使用的gcc编译器就是用C语言本身写的）你可以用几乎的任何语言写一个Python解释器。 用Python写Python既有优点又有缺点。最大的缺点就是速度：用Byterun执行代码要比用CPython执行慢的多，CPython解释器是用C语言实现的并做了优化。然而Byterun是为了学习而设计的，所以速度对我们不重要。使用Python最大优点是我们可以*仅仅*实现解释器，而不用担心Python运行时的部分，特别是对象系统。比如当Byterun需要创建一个类时，它就会回退到“真正”的Python。另外一个优势是Byterun很容易理解，部分原因是它是用高级语言写的（Python！）（另外我们不会对解释器做优化 &mdash; 再一次，清晰和简单比速度更重要） Building an Interpreter 在我们考察Byterun代码之前，我们需要一些对解释器结构的高层次视角。Python解释器是如何工作的？ Python解释器是一个虚拟机,模拟真实计算机的软件。我们这个虚拟机是栈机器，它用几个栈来完成操作（与之相对的是寄存器机器，它从特定的内存地址读写数据）。 Python解释器是一个_字节码解释器_：它的输入是一些命令集合称作_字节码_。当你写Python代码时，词法分析器，语法解析器和编译器生成code object让解释器去操作。每个code object都包含一个要被执行的指令集合 &mdash; 它就是字节码 &mdash; 另外还有一些解释器需要的信息。字节码是Python代码的一个_中间层表示_：它以一种解释器可以理解的方式来表示源代码。这和汇编语言作为C语言和机器语言的中间表示很类似。 A Tiny Interpreter 为了让说明更具体，让我们从一个非常小的解释器开始。它只能计算两个数的和，只能理解三个指令。它执行的所有代码只是这三个指令的不同组合。下面就是这三个指令： LOAD_VALUE ADD_TWO_VALUES PRINT_ANSWER 我们不关心词法，语法和编译，所以我们也不在乎这些指令是如何产生的。你可以想象，你写下7 + 5，然后一个编译器为你生成那三个指令的组合。如果你有一个合适的编译器，你甚至可以用Lisp的语法来写，只要它能生成相同的指令。 假设 7 + 5 生成这样的指令集： what_to_execute = { &quot;instructions&quot;: [(&quot;LOAD_VALUE&quot;, 0), # the first number (&quot;LOAD_VALUE&quot;, 1), # the second number (&quot;ADD_TWO_VALUES&quot;, None), (&quot;PRINT_ANSWER&quot;, None)], &quot;numbers&quot;: [7, 5] } Python解释器是一个_栈机器_，所以它必须通过操作栈来完成这个加法。(\aosafigref{500l.interpreter.stackmachine}.)解释器先执行第一条指令，LOAD_VALUE，把第一个数压到栈中。接着它把第二个数也压到栈中。然后，第三条指令，ADD_TWO_VALUES,先把两个数从栈中弹出，加起来，再把结果压入栈中。最后一步，把结果弹出并输出。 \aosafigure[240pt]{interpreter-images/interpreter-stack.png}{A stack machine}{500l.interpreter.stackmachine} LOAD_VALUE这条指令告诉解释器把一个数压入栈中，但指令本身并没有指明这个数是多少。指令需要一个额外的信息告诉解释器去哪里找到这个数。所以我们的指令集有两个部分：指令本身和一个常量列表。（在Python中，字节码就是我们称为的“指令”，而解释器执行的是_code object_。） 为什么不把数字直接嵌入指令之中？想象一下，如果我们加的不是数字，而是字符串。我们可不想把字符串这样的东西加到指令中，因为它可以有任意的长度。另外，我们这种设计也意味着我们只需要对象的一份拷贝，比如这个加法 7 + 7, 现在常量表 &quot;numbers&quot;只需包含一个7。 你可能会想为什么会需要除了ADD_TWO_VALUES之外的指令。的确，对于我们两个数加法，这个例子是有点人为制作的意思。然而，这个指令却是建造更复杂程序的轮子。比如，就我们目前定义的三个指令，只要给出正确的指令组合，我们可以做三个数的加法，或者任意个数的加法。同时，栈提供了一个清晰的方法去跟踪解释器的状态，这为我们增长的复杂性提供了支持。 现在让我们来完成我们的解释器。解释器对象需要一个栈，它可以用一个列表来表示。它还需要一个方法来描述怎样执行每条指令。比如，LOAD_VALUE会把一个值压入栈中。 class Interpreter: def __init__(self): self.stack = [] def LOAD_VALUE(self, number): self.stack.append(number) def PRINT_ANSWER(self): answer = self.stack.pop() print(answer) def ADD_TWO_VALUES(self): first_num = self.stack.pop() second_num = self.stack.pop() total = first_num + second_num self.stack.append(total) 这三个方法完成了解释器所理解的三条指令。但解释器还需要一样东西：一个能把所有东西结合在一起并执行的方法。这个方法就叫做run_code, 它把我们前面定义的字典结构what-to-execute作为参数，循环执行里面的每条指令，如何指令有参数，处理参数，然后调用解释器对象中相应的方法。 def run_code(self, what_to_execute): instructions = what_to_execute[&quot;instructions&quot;] numbers = what_to_execute[&quot;numbers&quot;] for each_step in instructions: instruction, argument = each_step if instruction == &quot;LOAD_VALUE&quot;: number = numbers[argument] self.LOAD_VALUE(number) elif instruction == &quot;ADD_TWO_VALUES&quot;: self.ADD_TWO_VALUES() elif instruction == &quot;PRINT_ANSWER&quot;: self.PRINT_ANSWER() 为了测试，我们创建一个解释器对象，然后用前面定义的 7 + 5 的指令集来调用run_code。 interpreter = Interpreter() interpreter.run_code(what_to_execute) 显然，它会输出12 尽管我们的解释器功能受限，但这个加法过程几乎和真正的Python解释器是一样的。这里，我们还有几点要注意。 首先，一些指令需要参数。在真正的Python bytecode中，大概有一半的指令有参数。像我们的例子一样，参数和指令打包在一起。注意_指令_的参数和传递给对应方法的参数是不同的。 第二，指令ADD_TWO_VALUES不需要任何参数，它从解释器栈中弹出所需的值。这正是以栈为基础的解释器的特点。 记得我们说过只要给出合适的指令集，不需要对解释器做任何改变，我们就能做多个数的加法。考虑下面的指令集，你觉得会发生什么？如果你有一个合适的编译器，什么代码才能编译出下面的指令集？ what_to_execute = { &quot;instructions&quot;: [(&quot;LOAD_VALUE&quot;, 0), (&quot;LOAD_VALUE&quot;, 1), (&quot;ADD_TWO_VALUES&quot;, None), (&quot;LOAD_VALUE&quot;, 2), (&quot;ADD_TWO_VALUES&quot;, None), (&quot;PRINT_ANSWER&quot;, None)], &quot;numbers&quot;: [7, 5, 8] } 从这点出发，我们开始看到这种结构的可扩展性：我们可以通过向解释器对象增加方法来描述更多的操作（只要有一个编译器能为我们生成组织良好的指令集）。 Variables 接下来给我们的解释器增加变量的支持。我们需要一个保存变量值的指令，STORE_NAME;一个取变量值的指令LOAD_NAME;和一个变量到值的映射关系。目前，我们会忽略命名空间和作用域，所以我们可以把变量和值的映射直接存储在解释器对象中。最后，我们要保证what_to_execute除了一个常量列表，还要有个变量名字的列表。 &gt;&gt;&gt; def s(): ...</div>
+    </footer>
+  </a>
+</article>
+
+        </div>
+        
+        <div class="col-sm-4">
+          <article class="grid">
+  <a href="http://qingyunha.github.io/hugo/translation/a-template-engine/">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Fri, Oct 9, 2015</time>
+      </div>
+      <h2 class="title">A Template Engine</h2>
+      <div class="summary">Introduction 大多数程序包含大量的逻辑和点点文本数据，编程语言被设计成适合做这样的 事情。但是有些编程任务只需要点点逻辑和大量的文本数据，对于这样的任务， 我们希望有一个更合适工具来做。模板引擎就是这样一个工具。在这一章，我 们会开发一个简单的模板引擎。 一个最常见的需要处理多文本数据的例子是web应用。web应用的一个重要部分 是为浏览器生成HTML网页。很少网页是完全静态的，它们至少包含一些动态数 据，比如用户名。一般情况下，网页有很大一部分动态数据：产品列表，好友消息更 新等等。 同时，每个HTML网页包含大量的静态文本。并且这些网页很大，有成千上万个 字节。这时，web开发者就有一个问题要解决：怎样才能最有效的生成同时包 含静态和动态数据的长字符串？随之而来的问题，这些静态文本其实是前端工 程师写的HTML，他们想希望用自己熟悉的方法处理这些HTML。 为了说明，让我们假设想生成这样一个简单的HTML &lt;p&gt;Welcome, Charlie!&lt;/p&gt; &lt;p&gt;Products:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;Apple: $1.00&lt;/li&gt; &lt;li&gt;Fig: $1.50&lt;/li&gt; &lt;li&gt;Pomegranate: $3.25&lt;/li&gt; &lt;/ul&gt; 这里，用户名会是动态的，产品的名称和数量也是动态的，甚至产品的数量也 不是固定的：在其他情况，可能有更多或更少的产品。 一个简单的方法生成这样的网页是把这样的字符串作为常量写入我们的代码中， 然后把它们拼在一起完成这个网页。动态数据使用类似字符替换的方法插入进 去。有些动态数据是重复的，比如产品列表，这就是说我们会有一些重复的 HTML段，所以我们要单独的去处理它们再和其他的HTML合并起来。 使用这种方法生成我们的HTML的代码会像这样 # The main HTML for the whole page. PAGE_HTML = &quot;&quot;&quot; &lt;p&gt;Welcome, {name}!&lt;/p&gt; &lt;p&gt;Products:&lt;/p&gt; &lt;ul&gt; {products} &lt;/ul&gt; &quot;&quot;&quot; # The HTML for each product displayed. PRODUCT_HTML = &quot;&lt;li&gt;{prodname}: {price}&lt;/li&gt;\n&quot; def make_page(username, products): product_html = &quot;&quot; for prodname, price in products: product_html += PRODUCT_HTML.format(prodname=prodname, price=format_price(price)) html = PAGE_HTML.format(name=username, products=product_html) return html 这样可以，但是我们搞得乱七八糟，HTML成了我们代码里的字符串常量，我们 很难看出这个HTML的结构，因为它被分成一段一段的了。数据格式的细节迷失 在python代码中。并且，为了修改HTML，我们的前端工程师需要修改python代 码。想象一下，如果这个网页比现在这个复杂10倍（或者100倍）我们代码会 是什么样子。 Templates 更好的方法是用模板来生成HTML，或者说把HTML写成一个模板，这样绝大部分 就是静态HTML，再加上一点使用特别符号的动态内容。现在我们的toy网页就成了 下面这样的模板 &lt;p&gt;Welcome, {{user_name}}!&lt;/p&gt; &lt;p&gt;Products:&lt;/p&gt; &lt;ul&gt; {% for product in product_list %} &lt;li&gt;{{ product.name }}: {{ product.price|format_price }}&lt;/li&gt; {% endfor %} &lt;/ul&gt; 这里我们关注的是HTML文本，另外加上一点逻辑。对比现在以文本为中心的方 法和之前以逻辑为中心的方法，我们之前的程序大部分是python代码，这里我 的程序大部分是静态的HTML标签。 在模板中采用的以静态为主的风格和大多数编程语言的工作方式相反。比如 python，几乎所有的源文件都是可执行代码，如果你需要静态文本，你就要把 它嵌到字符串中。 def hello(): print(&quot;Hello world!&quot;) hello() 当python读取这个源文件时，它把def hello():这样的文本解释成要被执行 的指令，而在双引号中的字符 print(&quot;Hello, world!&quot;)被指示成文本。这 就是编程语言如何工作的：动态的，嵌入点点静态内容。静态的内容通过双引号来指示。 一个模板语言把这个过程反过来了，大部分是静态文本，用特殊的符号指示动态 内容。 &lt;p&gt;Welcome, {{user_name}}!&lt;/p&gt; 这里的文本会直接出现在最终的HTML中，直到遇到 {{ 符号，它指示转换到 动态模式，这里user_name变量就会被替换。 字符串格式化函数，比如python的 &quot;foo = {foo}!&quot;.format(foo=17)就是一 个在字符串并插入数据创建文本的微型语言的例子。模板更进一步，加上逻辑结构，比如条件，循环。这只是在程度上不同。 把这些文件叫做模板是因为它们被用来生成大量结构相似的网页，只是细节不同。 为了在程序中使用HTML模板，我们需要一个模板引擎(template engine)：一个需要两个参数的函数，一个是描述页面结构和内容的静态模板，另一个是包含要插入到模板中的动态数据的上下文。模板引擎把模板和上下文结合起来生成完整的HTML字符串，它的任务是解释模板，用真正的数据替换动态的部分。 顺便说一下，HTML对模板引擎并没有什么特别的地方，它可以用来生成任何文本数据。比如，它可以被用来生成纯文本的email信息。但是它通常用于HTML，或许碰巧还有些专门对HTML的特性，比如转义，这个特性让你不用担心插入了对HTML有特殊含义的字符。 Supported Syntax 不同的模板引擎在语法支持上各有不同。我们的模板语法基于Django，一个非常流行的网站框架。因为我们的引擎使用python实现的，一些python的概念会出现在我们的语法中。在上一节的HTML中我们已经看到了一些语法，这里是我们语法的小总结。 上下文中的数据插入到两个大括号中 &lt;p&gt;Welcome, {{user_name}}!&lt;/p&gt; 在模板中可用的数据在上下文中，后面我们详细的讲到。 我们的模板引擎提供了一个简单自由的语法访问数据中的元素。在python中，这些表达式有不同的效果： dict[&quot;key&quot;] obj.attr obj.method() 在我们的语法中，所有这些操作都用点号表示。 dict.key obj.attr obj.method 这个点号会访问对象的属性，字典里的值，如果结果是可调用的，那么就自动调用它。这与python代码不同，你需要不同的语法完成不同的操作。在我们简单的语法下会是这样： &lt;p&gt;The price is: {{product.price}}, with a {{product.discount}}% discount.&lt;/p&gt; 点号可以在一个值上多次使用以访问元素链。 你还可以使用帮助函数，把它们叫做过滤器，用管道符号调用 &lt;p&gt;Short name: {{story.subject|slugify|lower}}&lt;/p&gt; 制作有趣的网页通常需要一点逻辑，所以我们有条件表达式： {% if user.is_logged_in %} &lt;p&gt;Welcome, {{ user.name }}!&lt;/p&gt; {% else %} &lt;p&gt;&lt;a href=&quot;/login&quot;&gt;Log in &lt;/a&gt;&lt;/p&gt; {% endif %} 循环可以让我们在网页里包含数据集合： &lt;p&gt;Products:&lt;/p&gt; &lt;ul&gt; {% for product in product_list %} &lt;li&gt;{{ product.name }}: {{ product.price|format_price }}&lt;/li&gt; {% endfor %} &lt;/ul&gt; 和其他的编程语言一样，条件和循环可以嵌套使用。 最后，我们可以对模板注释 {# This is the best template ever!</div>
     </footer>
   </a>
 </article>
@@ -95,8 +111,34 @@
     <div>
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/wiki/git-proxy/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/blog/python-name/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Mon, Aug 22, 2016</time>
+      </div>
+      <h2 class="title">python值传递 or 引用传递</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/blog/read-memcached-1.2.0/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Thu, Aug 18, 2016</time>
+      </div>
+      <h2 class="title">memcached-1.2.0 源码解读</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/wiki/git-proxy/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Aug 6, 2016</time>
@@ -108,8 +150,8 @@
 
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/post/python-logging/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/blog/python-logging/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Jul 9, 2016</time>
@@ -121,8 +163,8 @@
 
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/translation/crawler/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/translation/crawler/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Jul 9, 2016</time>
@@ -134,13 +176,39 @@
 
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/translation/python-interpreter/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/wiki/flask-dev/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, May 21, 2016</time>
+      </div>
+      <h2 class="title">成为Flask贡献者</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/translation/python-interpreter/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Mon, May 9, 2016</time>
       </div>
       <h2 class="title">A Python Interpreter Written in Python</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/translation/a-template-engine/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Fri, Oct 9, 2015</time>
+      </div>
+      <h2 class="title">A Template Engine</h2>
     </footer>
   </a>
 </article>
@@ -154,7 +222,7 @@
     <header>category</header>
     <div>
       <ul>
-        <li><a href="http://qingyunha.github.com/hugo/categories/translation">translation</a></li><li><a href="http://qingyunha.github.com/hugo/categories/blog">blog</a></li><li><a href="http://qingyunha.github.com/hugo/categories/wiki">wiki</a></li>
+        <li><a href="http://qingyunha.github.io/hugo/categories/blog">blog</a></li><li><a href="http://qingyunha.github.io/hugo/categories/translation">translation</a></li><li><a href="http://qingyunha.github.io/hugo/categories/wiki">wiki</a></li>
       </ul>
     </div>
   </section>
@@ -163,7 +231,7 @@
     <header>tag</header>
     <div>
       <ul>
-        <li><a href="http://qingyunha.github.com/hugo/tags/python">python</a></li><li><a href="http://qingyunha.github.com/hugo/tags/asyn">asyn</a></li><li><a href="http://qingyunha.github.com/hugo/tags/git">git</a></li><li><a href="http://qingyunha.github.com/hugo/tags/interpreter">interpreter</a></li><li><a href="http://qingyunha.github.com/hugo/tags/logging">logging</a></li><li><a href="http://qingyunha.github.com/hugo/tags/proxy">proxy</a></li><li><a href="http://qingyunha.github.com/hugo/tags/virtual-machine">virtual-machine</a></li>
+        <li><a href="http://qingyunha.github.io/hugo/tags/python">python</a></li><li><a href="http://qingyunha.github.io/hugo/tags/asyn">asyn</a></li><li><a href="http://qingyunha.github.io/hugo/tags/git">git</a></li><li><a href="http://qingyunha.github.io/hugo/tags/interpreter">interpreter</a></li><li><a href="http://qingyunha.github.io/hugo/tags/logging">logging</a></li><li><a href="http://qingyunha.github.io/hugo/tags/memcached">memcached</a></li><li><a href="http://qingyunha.github.io/hugo/tags/proxy">proxy</a></li><li><a href="http://qingyunha.github.io/hugo/tags/template-engine">template-engine</a></li><li><a href="http://qingyunha.github.io/hugo/tags/virtual-machine">virtual-machine</a></li>
       </ul>
     </div>
   </section>
@@ -179,7 +247,7 @@
 
 
 <footer class="l-footer">
-  <p>&copy; 2016 My Site</p>
+  <p>&copy; 2016 Qing Yun</p>
   <p>Powered by <a href="http://gohugo.io" target="_blank" rel="nofollow">Hugo</a>, Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank" rel="nofollow">robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank" rel="nofollow">Daisuke Tsuji</a></p>
 </footer>
 

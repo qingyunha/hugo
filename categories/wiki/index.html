@@ -9,17 +9,17 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
-    <link rel="stylesheet" href="http://qingyunha.github.com/hugo/css/styles.css">
-    <link rel="stylesheet" href="http://qingyunha.github.com/hugo/css/custom.css">
-    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://qingyunha.github.com/hugo/index.xml">
+    <link rel="stylesheet" href="http://qingyunha.github.io/hugo/css/styles.css">
+    <link rel="stylesheet" href="http://qingyunha.github.io/hugo/css/custom.css">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://qingyunha.github.io/hugo/index.xml">
 
     
-    <title>Wiki - My Site</title>
-    <meta property='og:title' content="Wiki - My Site">
+    <title>Wiki - Qing Yun</title>
+    <meta property='og:title' content="Wiki - Qing Yun">
     <meta property="og:type" content="article">
     
 
-    <meta property="og:url" content="http://qingyunha.github.com/hugo/categories/wiki/">
+    <meta property="og:url" content="http://qingyunha.github.io/hugo/categories/wiki/">
     
     
 
@@ -30,7 +30,7 @@
 
   <header class="l-header">
     <div class="p-logo">
-      <a href="http://qingyunha.github.com/hugo/">My Site</a>
+      <a href="http://qingyunha.github.io/hugo/">Qing Yun</a>
     </div>
   </header>
 
@@ -46,14 +46,14 @@
         
         <div class="col-sm-4">
           <article class="grid">
-  <a href="http://qingyunha.github.com/hugo/wiki/git-proxy/">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/wiki/git-proxy/">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Aug 6, 2016</time>
       </div>
       <h2 class="title">git proxy</h2>
-      <div class="summary">Git支持多种传输协议，ssh、git、HTTP(S)，甚至ftp，rsync。 当使用不同传输方式时，设置代理的方式也不同。 SSH 当使用SSH协议时，git实际上直接使用ssh命令，所以我们只要给ssh设置好代理就可以了。在~/.ssh/config中： Host github.com User git ProxyCommand nc -x localhost:1080 %h %p 参见ssh_config(5)manual HTTP(S) git使用libcurl来处理HTTP和HTTPS，可以通过设置git的http.proxy选项： git config --global http.proxy socks5://localhost:1080 参见curl(1)的&ndash;proxy选项和git-config(1)中的http.proxy Git 当使用git传输协议时，你可以设置git的gitproxy选项： git config --global core.gitproxy git-proxy 这里的git-proxy是任何一个可执行文件，同时它要能接受2个参数，host、port（git服务器的地址和端口）。git-proxy完成代理工作。 例如这样一个shell脚本： #!/usr/bin/env bash nc -x localhost:1080 $1 $2 参见git_config(1) 如何判断git使用何种协议 根据git服务器的url就可以看出： ssh://[user@]host.xz[:port]/path/to/repo.git/ git://host.xz[:port]/path/to/repo.git/ http[s]://host.xz[:port]/path/to/repo.git/ ftp[s]://host.xz[:port]/path/to/repo.git/ rsync://host.xz/path/to/repo.git/ 对于SSH协议，还有一种类似scp的语法： [user@]host.xz:path/to/repo.git/ 参见git-fetch(1)的GIT URLS nc命令 nc(netcat)可以用 -X 指定代理方式：socks4、 sockes5、 HTTPS CONNECT，默认为socks5。 -x 指定代理地址。 参见nc(1) reference Tutorial: how to use git through a proxy</div>
+      <div class="summary">Git支持多种传输协议，ssh、git、HTTP(S)，甚至ftp，rsync。 当使用不同传输方式时，设置代理的方式也不同。 SSH 当使用SSH协议时，git实际上直接使用ssh命令，所以我们只要给ssh设置好代理就可以了。在~/.ssh/config中： Host github.com User git ProxyCommand nc -x localhost:1080 %h %p 参见ssh_config(5)manual HTTP(S) git使用libcurl来处理HTTP和HTTPS，可以通过设置git的http.proxy选项： git config --global http.proxy socks5://localhost:1080 也可以直接设置curl支持的环境变量，比如ALL_PROXY=socks5://localhost:1080 参见curl(1)的&ndash;proxy选项和git-config(1)中的http.proxy Git 当使用git传输协议时，你可以设置git的gitproxy选项： git config --global core.gitproxy git-proxy 这里的git-proxy是任何一个可执行文件，同时它要能接受2个参数，host、port（git服务器的地址和端口）。git-proxy完成代理工作。 例如这样一个shell脚本： #!/usr/bin/env bash nc -x localhost:1080 $1 $2 也可以直接设置环境变量GIT_PROXY_COMMAND=git-porxy 参见git_config(1) 如何判断git使用何种协议 根据git服务器的url就可以看出： ssh://[user@]host.xz[:port]/path/to/repo.git/ git://host.xz[:port]/path/to/repo.git/ http[s]://host.xz[:port]/path/to/repo.git/ ftp[s]://host.xz[:port]/path/to/repo.git/ rsync://host.xz/path/to/repo.git/ 对于SSH协议，还有一种类似scp的语法： [user@]host.xz:path/to/repo.git/ 参见git-fetch(1)的GIT URLS nc命令 nc(netcat)可以用 -X 指定代理方式：socks4、 sockes5、 HTTPS CONNECT，默认为socks5。 -x 指定代理地址。 参见nc(1) example golang的go get命令会用到git，你可以这样： env ALL_PROXY=socks5://localhost:1080 GIT_PROXY_COMMAND=git-porxy go get -v ./...</div>
     </footer>
   </a>
 </article>
@@ -79,8 +79,34 @@
     <div>
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/wiki/git-proxy/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/blog/python-name/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Mon, Aug 22, 2016</time>
+      </div>
+      <h2 class="title">python值传递 or 引用传递</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/blog/read-memcached-1.2.0/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Thu, Aug 18, 2016</time>
+      </div>
+      <h2 class="title">memcached-1.2.0 源码解读</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/wiki/git-proxy/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Aug 6, 2016</time>
@@ -92,8 +118,8 @@
 
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/post/python-logging/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/blog/python-logging/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Jul 9, 2016</time>
@@ -105,8 +131,8 @@
 
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/translation/crawler/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/translation/crawler/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Sat, Jul 9, 2016</time>
@@ -118,13 +144,39 @@
 
       
       <article class="li">
-  <a href="http://qingyunha.github.com/hugo/translation/python-interpreter/" class="clearfix">
-    <div class="image" style="background-image: url(http://qingyunha.github.com/hugo/images/default.jpg);"></div>
+  <a href="http://qingyunha.github.io/hugo/wiki/flask-dev/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Sat, May 21, 2016</time>
+      </div>
+      <h2 class="title">成为Flask贡献者</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/translation/python-interpreter/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
     <footer>
       <div class="date">
         <time>Mon, May 9, 2016</time>
       </div>
       <h2 class="title">A Python Interpreter Written in Python</h2>
+    </footer>
+  </a>
+</article>
+
+      
+      <article class="li">
+  <a href="http://qingyunha.github.io/hugo/translation/a-template-engine/" class="clearfix">
+    <div class="image" style="background-image: url(http://qingyunha.github.io/hugo/images/default.jpg);"></div>
+    <footer>
+      <div class="date">
+        <time>Fri, Oct 9, 2015</time>
+      </div>
+      <h2 class="title">A Template Engine</h2>
     </footer>
   </a>
 </article>
@@ -138,7 +190,7 @@
     <header>category</header>
     <div>
       <ul>
-        <li><a href="http://qingyunha.github.com/hugo/categories/translation">translation</a></li><li><a href="http://qingyunha.github.com/hugo/categories/blog">blog</a></li><li><a href="http://qingyunha.github.com/hugo/categories/wiki">wiki</a></li>
+        <li><a href="http://qingyunha.github.io/hugo/categories/blog">blog</a></li><li><a href="http://qingyunha.github.io/hugo/categories/translation">translation</a></li><li><a href="http://qingyunha.github.io/hugo/categories/wiki">wiki</a></li>
       </ul>
     </div>
   </section>
@@ -147,7 +199,7 @@
     <header>tag</header>
     <div>
       <ul>
-        <li><a href="http://qingyunha.github.com/hugo/tags/python">python</a></li><li><a href="http://qingyunha.github.com/hugo/tags/asyn">asyn</a></li><li><a href="http://qingyunha.github.com/hugo/tags/git">git</a></li><li><a href="http://qingyunha.github.com/hugo/tags/interpreter">interpreter</a></li><li><a href="http://qingyunha.github.com/hugo/tags/logging">logging</a></li><li><a href="http://qingyunha.github.com/hugo/tags/proxy">proxy</a></li><li><a href="http://qingyunha.github.com/hugo/tags/virtual-machine">virtual-machine</a></li>
+        <li><a href="http://qingyunha.github.io/hugo/tags/python">python</a></li><li><a href="http://qingyunha.github.io/hugo/tags/asyn">asyn</a></li><li><a href="http://qingyunha.github.io/hugo/tags/git">git</a></li><li><a href="http://qingyunha.github.io/hugo/tags/interpreter">interpreter</a></li><li><a href="http://qingyunha.github.io/hugo/tags/logging">logging</a></li><li><a href="http://qingyunha.github.io/hugo/tags/memcached">memcached</a></li><li><a href="http://qingyunha.github.io/hugo/tags/proxy">proxy</a></li><li><a href="http://qingyunha.github.io/hugo/tags/template-engine">template-engine</a></li><li><a href="http://qingyunha.github.io/hugo/tags/virtual-machine">virtual-machine</a></li>
       </ul>
     </div>
   </section>
@@ -163,7 +215,7 @@
 
 
 <footer class="l-footer">
-  <p>&copy; 2016 My Site</p>
+  <p>&copy; 2016 Qing Yun</p>
   <p>Powered by <a href="http://gohugo.io" target="_blank" rel="nofollow">Hugo</a>, Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank" rel="nofollow">robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank" rel="nofollow">Daisuke Tsuji</a></p>
 </footer>
 

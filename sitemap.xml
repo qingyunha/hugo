@@ -2,28 +2,48 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://qingyunha.github.com/hugo/</loc>
+    <loc>http://qingyunha.github.io/hugo/</loc>
+    <lastmod>2016-08-22T22:23:25+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://qingyunha.github.io/hugo/blog/python-name/</loc>
+    <lastmod>2016-08-22T22:23:25+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://qingyunha.github.io/hugo/blog/read-memcached-1.2.0/</loc>
+    <lastmod>2016-08-18T20:21:26+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://qingyunha.github.io/hugo/wiki/git-proxy/</loc>
     <lastmod>2016-08-06T14:38:12+08:00</lastmod>
   </url>
   
   <url>
-    <loc>http://qingyunha.github.com/hugo/wiki/git-proxy/</loc>
-    <lastmod>2016-08-06T14:38:12+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://qingyunha.github.com/hugo/post/python-logging/</loc>
+    <loc>http://qingyunha.github.io/hugo/blog/python-logging/</loc>
     <lastmod>2016-07-09T21:32:25+08:00</lastmod>
   </url>
   
   <url>
-    <loc>http://qingyunha.github.com/hugo/translation/crawler/</loc>
+    <loc>http://qingyunha.github.io/hugo/translation/crawler/</loc>
     <lastmod>2016-07-09T11:32:25+08:00</lastmod>
   </url>
   
   <url>
-    <loc>http://qingyunha.github.com/hugo/translation/python-interpreter/</loc>
+    <loc>http://qingyunha.github.io/hugo/wiki/flask-dev/</loc>
+    <lastmod>2016-05-21T21:48:31+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://qingyunha.github.io/hugo/translation/python-interpreter/</loc>
     <lastmod>2016-05-09T11:32:25+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://qingyunha.github.io/hugo/translation/a-template-engine/</loc>
+    <lastmod>2015-10-09T11:32:25+08:00</lastmod>
   </url>
   
 </urlset>
